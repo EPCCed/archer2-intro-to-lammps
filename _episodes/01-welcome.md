@@ -8,7 +8,7 @@ questions:
 - "How can I give feedback to improve the course?"
 objectives:
 - "Understand how this course works, how I can get help and how I can give feedback."
-keypoints:
+key points:
 - "We should all understand and follow the [ARCHER2 Code of Conduct](https://www.archer2.ac.uk/training/code-of-conduct/) to ensure this course is conducted in the best teaching environment."
 - "The course will be flexible to best meet the learning needs of the attendees."
 - "Feedback is an essential part of our training to allow us to continue to improve and make sure the course is as useful as possible to attendees."
@@ -21,6 +21,7 @@ Rather than having separate lectures and practical sessions, this course is taug
 learning key skills and information throughout the course. Typically, this follows the method of
 the instructor demonstrating and then the attendees doing along with the instructor.
 
+[comment]: # (many helpers?)
 There are many helpers available to assist you and to answer any questions you may have as we
 work through the material together. You should also feel free to ask questions of the instructor
 whenever you like. The instructor will also provide many opportunities to pause and ask questions.
@@ -38,7 +39,7 @@ information you found useful.
 
 Feedback is integral to how we approach training both during and after the course. In particular, we
 use informal and structured feedback activities during the course to ensure we tailor the pace and
-content appropriately for the attendees and feedback after the course to help us improve our training
+content appropriately for the attendees, and feedback after the course to help us improve our training
 for the future.
 
 You will be issued with red and green "stickies" (or shown how to use their virtual equivalent for 
@@ -51,7 +52,7 @@ to use the stickies in other, specific situations.
 
 At the lunch break (and end of days for multi-day courses) we will also run a quick feedback
 activity to gauge how the course is matching onto attendees requirements. Instructors and helpers
-will review this feedback over lunch (or overnight) and provide a summary of what we found at the
+will review this feedback over lunch, or overnight, provide a summary of what we found at the
 start of the next session and, potentially, how the upcoming materiel/schedule will be changed
 to address the feedback.
 

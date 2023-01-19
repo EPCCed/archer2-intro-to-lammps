@@ -6,11 +6,11 @@ questions:
 - "How can I access ARCHER2 interactively?"
 objectives:
 - "Understand how to connect to ARCHER2."
-keypoints:
+key points:
 - "ARCHER2's login address is `login.archer2.ac.uk`."
 ---
 
-## Puspose
+## Purpose
 
 Attendees of this course will get access to the ARCHER2 HPC facility. You will
 have the ability to request an account and to login to ARCHER2 before the
@@ -18,7 +18,7 @@ course begins. If you are not able to login, you can come to this pre-session
 where the instructors will help make sure you can login to ARCHER2.
 
 Note that if you are not able to login to ARCHER2 and do not attend this 
-session, you may struggle to run the course excercises as these were designed 
+session, you may struggle to run the course exercises as these were designed 
 to run on ARCHER2 specifically.
 
 ## Connecting using SSH
@@ -59,7 +59,7 @@ on the amount and structure of the data you want to transfer and where you want 
 the data to. The three main options are:
 
 * `scp`: The standard way to transfer small to medium amounts of data off ARCHER2 to any other location
-* `rsync`: Used if you need to keep small to medium datasets synchronised between two different locations
+* `rsync`: Used if you need to keep small to medium data-sets synchronised between two different locations
 
 More information on data transfer mechanisms can be found in the ARCHER2 User and Best Practice Guide:
 

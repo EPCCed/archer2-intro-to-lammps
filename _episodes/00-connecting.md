@@ -6,7 +6,7 @@ questions:
 - "How can I access ARCHER2 interactively?"
 objectives:
 - "Understand how to connect to ARCHER2."
-key points:
+keypoints:
 - "ARCHER2's login address is `login.archer2.ac.uk`."
 ---
 

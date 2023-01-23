@@ -1,5 +1,5 @@
 ---
-title: ""
+title: "An introduction to Molecular Dynamics"
 teaching: 20
 exercises: 30
 questions:
@@ -88,7 +88,7 @@ In practical terms, an MD software will take the initial positions of the partic
 
 
 
-{% include figure.html url="" max-width="80%" file="/fig/2_MD-primer/how_md_works.jpg" alt="How MD Works" %}
+{% include figure.html url="" max-width="80%" file="/fig/2_MD-primer/how_md_works.png" alt="How MD Works" %}
 
 
 

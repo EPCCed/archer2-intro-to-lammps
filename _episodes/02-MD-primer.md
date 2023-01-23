@@ -1,37 +1,21 @@
 ---
-title: "Measuring and improving LAMMPS performance"
+title: ""
 teaching: 20
 exercises: 30
 questions:
-- "How can we run LAMMPS on ARCHER2?"
-- "How can we improve the performance of LAMMPS?"
-objectives:
-- "Gain an overview of submitting and running jobs on the ARCHER2 service."
-- "Gain an overview of methods to improve the performance of LAMMPS."
-keypoints:
-- "LAMMPS offers a number of built in methods to improve performance."
-- "It is important to spend some time understanding your system and 
-   considering its performance."
-- "Where possible, always run a quick benchmark of your system before setting 
-   up a large run."
 ---
 
 ## What is LAMMPS?
 
-LAMMPS (Large-scale Atomic/Molecular Massively Parallel Simulator) is a 
-versatile classical molecular dynamics software package developed by Sandia 
-National Laboratories and by its wide user-base.
+LAMMPS (Large-scale Atomic/Molecular Massively Parallel Simulator) is a versatile classical molecular dynamics software package developed by Sandia National Laboratories and by its wide user-base.
 
-It can be downloaded from 
-[https://lammps.sandia.gov/download.html](https://lammps.sandia.gov/download.html)
+It can be downloaded from [https://lammps.sandia.gov/download.html](https://lammps.sandia.gov/download.html)
 
-Everything we are covering today (and a lot of other info) can be found in the 
-[LAMMPS User Manual](https://lammps.sandia.gov/doc/Manual.html)
+Everything we are covering today (and a lot of other info) can be found in the [LAMMPS User Manual](https://lammps.sandia.gov/doc/Manual.html)
 
 ## Running LAMMPS on ARCHER2
 
-ARCHER2 uses a module system. In general, you can run LAMMPS on ARCHER2 by 
-using the LAMMPS module:
+ARCHER2 uses a module system. In general, you can run LAMMPS on ARCHER2 by using the LAMMPS module:
 
 ```bash
 ta058js@ln03:~> module avail lammps
@@ -41,11 +25,9 @@ ta058js@ln03:~> module avail lammps
 
 ```
 
-Running `module load lammps` will set up your environment to use LAMMPS. For 
-this course, we will be using certain LAMMPS packages that are not included in 
-the central module. We have built a version of LAMMPS that can be accessed by 
-ensuring that the following commands are run prior to executing your LAMMPS 
-command.
+Running `module load lammps` will set up your environment to use LAMMPS.
+For this course, we will be using certain LAMMPS packages that are not included in the central module.
+We have built a version of LAMMPS that can be accessed by ensuring that the following commands are run prior to executing your LAMMPS command.
 
 ```bash
 module load PrgEnv-gnu
@@ -75,10 +57,13 @@ in your `/work/ta058/ta058/<username>` directory.
 For this course, we have prepared a number of exercises. You can get a copy of 
 these exercises by running (make sure to run this from `/work`):
 
+
+[comment]: # (change to intro link)
 ```bash
 svn checkout https://github.com/EPCCed/archer2-advanced-use-of-lammps/trunk/exercises
 ```
 
+[comment]: # (change exercise names and file names)
 Once this is downloaded, please  `cd exercises/1-performance-exercise/`. In this 
 directory you will find three files:
 
@@ -92,15 +77,42 @@ directory you will find three files:
     template will be copied by the `in.lammps` file to generate our simulation 
     box.
 
-> ## Why ethanol?
-> 
-> The `in.ethanol` LAMMPS input that we are using for this exercise is an 
-> easily edited benchmark script used within EPCC to test system performance. 
-> The intention of this script is to be easy to edit and alter when running on 
-> very varied core/node counts. By editing the `X_LENGTH`, `Y_LENGTH`, and 
-> `Z_LENGTH` variables, you can increase the box size substantially. As to the 
-> choice of molecule, we wanted something small and with partial charges -- 
-> ethanol seemed to fit both of those.
+## What is Molecular Dynamics
+
+Molecular Dynamics is, simply, the application of Newtown's laws of motion to 
+systems of particles that can range in size from atoms, course-grained moieties, entire molecules, or even grains of sand.
+In practical terms, an MD software will take the initial positions of the particles,
+
+
+
+
+
+
+{% include figure.html url="" max-width="80%" file="/fig/2_MD-primer/how_md_works.jpg" alt="How MD Works" %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# old
+
+
+The `in.ethanol` LAMMPS input that we are using for this exercise is an 
+easily edited benchmark script used within EPCC to test system performance. 
+The intention of this script is to be easy to edit and alter when running on 
+very varied core/node counts. By editing the `X_LENGTH`, `Y_LENGTH`, and 
+`Z_LENGTH` variables, you can increase the box size substantially. As to the 
+choice of molecule, we wanted something small and with partial charges -- 
+ethanol fits both of those.
 {: .callout}
 
 To submit your first job on ARCHER2, please run:

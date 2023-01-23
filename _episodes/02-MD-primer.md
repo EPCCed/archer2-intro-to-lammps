@@ -6,7 +6,7 @@ questions:
 ---
 
 
-## What is LAMMPS?
+# What is LAMMPS?
 
 LAMMPS (Large-scale Atomic/Molecular Massively Parallel Simulator) is a versatile classical molecular dynamics software package developed by Sandia National Laboratories and by its wide user-base.
 
@@ -15,7 +15,7 @@ It can be downloaded from [https://lammps.sandia.gov/download.html](https://lamm
 Everything we are covering today (and a lot of other info) can be found in the [LAMMPS User Manual](https://lammps.sandia.gov/doc/Manual.html)
 
 
-## Running LAMMPS on ARCHER2
+# Running LAMMPS on ARCHER2
 
 ARCHER2 uses a module system. In general, you can run LAMMPS on ARCHER2 by using the LAMMPS module:
 
@@ -47,7 +47,7 @@ Once your environment is set up, you will have access to the `lmp` LAMMPS execut
 Note that you will only be able to run this on a single core on the ARCHER2 login node.
 
 
-### Submitting a job to the compute nodes
+## Submitting a job to the compute nodes
 
 To run LAMMPS on multiple cores/nodes, you will need to submit a job to the ARCHER2 compute nodes.
 The compute nodes do not have access to the landing `home` filesystem -- this filesystem is to store useful/important information.
@@ -73,7 +73,7 @@ In this directory you will find three files:
     This template will be copied by the `in.lammps` file to generate our simulation box.
 
 
-## What is Molecular Dynamics
+# What is Molecular Dynamics
 
 Molecular Dynamics is, simply, the application of Newtown's laws of motion to systems of particles that can range in size from atoms, course-grained moieties, entire molecules, or even grains of sand.
 In practical terms, any MD software follows the same basic steps:
@@ -93,7 +93,7 @@ The order that the commands appear in **can** be important, depending on the exa
 Always refer to the LAMMPS manual to check.
 
 
-### Simulation setup
+## Simulation setup
 
 The first thing we have to do is chose a style of units.
 This can be achieved by the `units` command:
@@ -181,7 +181,7 @@ The final result is a box like this:
 
 
 
-### Inter-particle interactions
+## Inter-particle interactions
 
 Now that we have initial positions for our particles in a simulation box, we have to define how they will interact with each-other.
 
@@ -201,7 +201,7 @@ This approximation is only valid because the LJ potential is assymptotic to zero
 {% include figure.html url="" max-width="80%" file="/fig/2_MD-primer/lj_potential.png" alt="Lennard-Jones potential" %}
 
 To make sure there is no discontinuity at the cutoff point, we can shift the potential.
-This subtracts the value of the potential at the cutoff point (which should be very low) from the entire function, making the energy at the cuttoff equal to zero.
+This subtracts the value of the potential at the cutoff point (which should be very low) from the entire function, making the energy at the cutoff equal to zero.
 
 ```
 pair_modify shift yes
@@ -225,12 +225,43 @@ For example, LAMMPS has functions to simulate bonds, angles, dihedrals, improper
 
 
 
+## Neighbour lists
 
+To improve simulation performance, and because we are truncating interactions at a certain distance, we can keep a list of particles that are close to each other (under a neighbour cutoff distance).
+This reduces the number of comparisons needed per timestep, at the cost of a small amount of memory.
+
+{% include figure.html url="" max-width="80%" file="/fig/2_MD-primera/cutoff.png" alt="Neighbour lists" %}
+
+So we can add a 0.3σ distance to our neight cutoff, above the LJ cutoff, so a total of 3.8σ.
+The `bin` keyword refers to the algorithm used to build the list, `bin` is the best performing one for systems with homogenous sizes of particles.
+
+```
+neighbor        0.3 bin
+```
+
+However, these lists need to be updated periodically, essentially more often than it takes for a particle to move neighbour_cutoff - LJ_cutoff.
+This is what the next command does.
+The `delay` parameter sets the minimum number of timesteps that need to pass since the last neighbour list rebuild for LAMMPS to even consider rebuilding it again.
+The `every` parameter tells LAMMPS to attempt to build the neighbour list if `number_time_step mod every = 0` -- by default, the rebuild will only be triggered if an atom has moved more than half the neighbour skin distance (the 0.3 above)
+
+```
+neigh_modify    delay 10 every 1
+```
+
+## Simulation parameters
+
+
+```
+fix     LinMom all momentum 50 linear 1 1 1 angular
+```
+```
+fix     1 all nvt temp 1.00 1.00 5.0
+```
 
 
 [comment]: # (move whole file somewhere else?)
 ```
-###################################
+####################################
 # Example LAMMPS input script      #
 # for a simple Lennard Jones fluid #
 ####################################
@@ -270,7 +301,7 @@ mass        1 1.0
 ####################################
 # 3) Neighbour lists
 #   - Each atom will only consider neighbours
-#     within a distance of 2.8 of each other
+#     within a distance of 3.8 of each other
 #   - The neighbour lists are recalculated
 #     every timestep
 ####################################

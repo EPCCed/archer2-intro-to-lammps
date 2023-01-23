@@ -136,7 +136,7 @@ Each of the three letters after the keyword corresponds to a direction (x, y, z)
 Other boundary conditions are available (fixed, shrink-wrapped, and shrink-wrapped with minimum).
 
 
-{% include figure.html url="" max-width="80%" file="/fig/2_MD-primer/PBC.png" alt="Periodiv Boundary Conditions" %}
+{% include figure.html url="" max-width="80%" file="/fig/2_MD-primer/PBC.png" alt="Periodic Boundary Conditions" %}
 
 Periodic boundary conditions allow the approximation of an infinite system by simulating only a small part, a unit-cell.
 The most common shapes of (3D) unit-cell is cuboidal, but any shape that completely tesselates 3D space can be used.
@@ -175,10 +175,53 @@ And finally, we create the atoms in the box, using the box and lattice previousl
 create_atoms  1 box
 ```
 
+The final result is a box like this:
+
+{% include figure.html url="" max-width="80%" file="/fig/2_MD-primer/lattice.png" alt="Lattice" %}
 
 
 
+### Inter-particle interactions
 
+Now that we have initial positions for our particles in a simulation box, we have to define how they will interact with each-other.
+
+The first line in this section defines the style of interaction our particles will use.
+
+```
+pair_style  lj/cut 3.5
+```
+
+In this case, Lennard-Jones interactions, cut at 3.5 Å.
+Cutting the interactions at a certain distance (as oppposed to calculating interactions up to an 'infinite' distance, drastically reduces the computation time.
+This approximation is only valid because the LJ potential is assymptotic to zero at high *d* distance between particles.
+
+[comment]: # (side by side?)
+{% include figure.html url="" max-width="80%" file="/fig/2_MD-primer/dist.png" alt="Distance between particles" %}
+
+{% include figure.html url="" max-width="80%" file="/fig/2_MD-primer/lj_potential.png" alt="Lennard-Jones potential" %}
+
+To make sure there is no discontinuity at the cutoff point, we can shift the potential.
+This subtracts the value of the potential at the cutoff point (which should be very low) from the entire function, making the energy at the cuttoff equal to zero.
+
+```
+pair_modify shift yes
+```
+
+Next we set the LJ parameters for the interactions between atom types `1` and `1` (the only we have, there can be more), ε, the maximum depth of the energy well, and σ, the zero-crossing distance for the potential.
+Note that these are both relative to the non-shifted potential.
+
+```
+pair_coeff  1 1 1.0 1.0
+```
+
+Finally, we set the mass of atom type 1 to 1.0 units
+
+```
+mass        1 1.0
+```
+
+There are many other characteristics that may be needed for a given simulation.
+For example, LAMMPS has functions to simulate bonds, angles, dihedrals, impropers, and more.
 
 
 
@@ -187,7 +230,7 @@ create_atoms  1 box
 
 [comment]: # (move whole file somewhere else?)
 ```
-####################################
+###################################
 # Example LAMMPS input script      #
 # for a simple Lennard Jones fluid #
 ####################################

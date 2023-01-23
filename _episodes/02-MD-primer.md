@@ -5,6 +5,7 @@ exercises: 30
 questions:
 ---
 
+
 ## What is LAMMPS?
 
 LAMMPS (Large-scale Atomic/Molecular Massively Parallel Simulator) is a versatile classical molecular dynamics software package developed by Sandia National Laboratories and by its wide user-base.
@@ -12,6 +13,7 @@ LAMMPS (Large-scale Atomic/Molecular Massively Parallel Simulator) is a versatil
 It can be downloaded from [https://lammps.sandia.gov/download.html](https://lammps.sandia.gov/download.html)
 
 Everything we are covering today (and a lot of other info) can be found in the [LAMMPS User Manual](https://lammps.sandia.gov/doc/Manual.html)
+
 
 ## Running LAMMPS on ARCHER2
 
@@ -39,24 +41,20 @@ export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${LAMMPS_DIR}/lib64
 export PYTHONPATH=${PYTHONPATH}:${LAMMPS_DIR}/lib/python3.8/site-packages
 ```
 
-The build instructions for this version are described in the next section of 
-the course.
+The build instructions for this version are described in the next section of the course.
 
-Once your environment is set up, you will have access to the `lmp` LAMMPS 
-executable. Note that you will only be able to run this on a single core on 
-the ARCHER2 login node.
+Once your environment is set up, you will have access to the `lmp` LAMMPS executable.
+Note that you will only be able to run this on a single core on the ARCHER2 login node.
+
 
 ### Submitting a job to the compute nodes
 
-To run LAMMPS on multiple cores/nodes, you will need to submit a job to the 
-ARCHER2 compute nodes. The compute nodes do not have access to the landing 
-`home` filesystem -- this filesystem is to store useful/important information. 
-On ARCHER2, when submitting jobs to the compute nodes, make sure that you are 
-in your `/work/ta058/ta058/<username>` directory.
+To run LAMMPS on multiple cores/nodes, you will need to submit a job to the ARCHER2 compute nodes.
+The compute nodes do not have access to the landing `home` filesystem -- this filesystem is to store useful/important information.
+On ARCHER2, when submitting jobs to the compute nodes, make sure that you are in your `/work/ta058/ta058/<username>` directory.
 
-For this course, we have prepared a number of exercises. You can get a copy of 
-these exercises by running (make sure to run this from `/work`):
-
+For this course, we have prepared a number of exercises.
+You can get a copy of these exercises by running (make sure to run this from `/work`):
 
 [comment]: # (change to intro link)
 ```bash
@@ -64,47 +62,214 @@ svn checkout https://github.com/EPCCed/archer2-advanced-use-of-lammps/trunk/exer
 ```
 
 [comment]: # (change exercise names and file names)
-Once this is downloaded, please  `cd exercises/1-performance-exercise/`. In this 
-directory you will find three files:
+Once this is downloaded, please  `cd exercises/1-performance-exercise/`.
+In this directory you will find three files:
 
-  - `sub.slurm` is a Slurm submission script -- this will let you submit jobs 
-    to the compute nodes. Initially, it will run a single core job, but we 
-    will be editing it to run on more cores.
-  - `in.ethanol` is the LAMMPS input script that we will be using for this 
-    exercise. This script is meant to run a small simulation of 125 ethanol 
-    molecules in a periodic box.
-  - `data.ethanol` is a LAMMPS data file for a single ethanol molecule. This 
-    template will be copied by the `in.lammps` file to generate our simulation 
-    box.
+  - `sub.slurm` is a Slurm submission script -- this will let you submit jobs to the compute nodes.
+    Initially, it will run a single core job, but we will be editing it to run on more cores.
+  - `in.ethanol` is the LAMMPS input script that we will be using for this exercise.
+    This script is meant to run a small simulation of 125 ethanol molecules in a periodic box.
+  - `data.ethanol` is a LAMMPS data file for a single ethanol molecule.
+    This template will be copied by the `in.lammps` file to generate our simulation box.
+
 
 ## What is Molecular Dynamics
 
-Molecular Dynamics is, simply, the application of Newtown's laws of motion to 
-systems of particles that can range in size from atoms, course-grained moieties, entire molecules, or even grains of sand.
-In practical terms, an MD software will take the initial positions of the particles,
+Molecular Dynamics is, simply, the application of Newtown's laws of motion to systems of particles that can range in size from atoms, course-grained moieties, entire molecules, or even grains of sand.
+In practical terms, any MD software follows the same basic steps:
+
+  1. Take the initial positions of the particles in the simulation box and calculate the total force that apply to each particle, using the chosen force-field.
+  2. Use the calculated forces to calculate the acceleration to add to each particle;
+  3. Use the acceleration to calculate the new velocity of each particle;
+  4. Use the the new velocity of each particle, and the defined time-step, to calculate a new position for each particle.
+
+With the new particle positions, the cycle continues, one very small time-step at a time.
+
+[comment]: # (make image better)
+{% include figure.html url="" max-width="80%" file="/fig/2_MD-primer/MD.png" alt="How MD Works" %}
+
+With this in mind, we can take a look at a very simple example of a LAMMPS input file, `in.lj`, and discuss each command -- and their related concepts -- one by one.
+The order that the commands appear in **can** be important, depending on the exact details.
+Always refer to the LAMMPS manual to check.
+
+
+### Simulation setup
+
+The first thing we have to do is chose a style of units.
+This can be achieved by the `units` command:
+
+```
+units         lj
+```
+
+[comment]: # (link?)
+LAMMPS has several different unit styles, useful in different types of simulations.
+In this example, we are using `lj`, or Lennard-Jones units.
+These are dimentionless units, that are defined on the LJ potential parameters.
+They are computationally advantageous because they're usually close to unity, and required less precise (lower number of bits) floating point variables -- which in turn reduced the memory requirements, and increased calculation speed.
+
+The next line defines what style of `atoms` (LAMMPS's terminology is for particle) to use.
+
+```
+atom_style    atomic
+```
+
+This impacts on what attributes each atom has associated with it -- this cannot be changed during a simulation
+Every style stores: coordinates, velocities, atom IDs, and atom types.
+The `atomic` style doesn't add any further attributes.
+
+We then choose 3 dimentions.
+
+```
+dimension     3
+```
+
+LAMMPS is also capable of simulating two-dimentional systems.
+
+The boundary command sets the styles for the boudaries for the simulation box.
+
+```
+boundary      p p p
+```
+
+Each of the three letters after the keyword corresponds to a direction (x, y, z), and `p` means that the selected boundary is to be periodic.
+Other boundary conditions are available (fixed, shrink-wrapped, and shrink-wrapped with minimum).
+
+
+{% include figure.html url="" max-width="80%" file="/fig/2_MD-primer/PBC.png" alt="Periodiv Boundary Conditions" %}
+
+Periodic boundary conditions allow the approximation of an infinite system by simulating only a small part, a unit-cell.
+The most common shapes of (3D) unit-cell is cuboidal, but any shape that completely tesselates 3D space can be used.
+The topology of PBCs is such that a particle leaving one side of the unit cell, it reappears on the other side.
+A 2D map with PBC could be perfectly mapped to a torus.
+
+Another key aspect of using PBCs is the use of **minimum-image convention** for calculating interactions between particles.
+This guarantees that each particle interacts only with the closest *image* of another particle, no matter with unit-cell (the original simulation box or one of the periodic images) it belongs to.
+
+
+The lattice command defines a set of points in space, where sc is simple cubic.
+
+```
+lattice       sc 0.60
+```
+
+In this case, because we are working in LJ units, the number `0.60` refers to the LJ density `ρ*`.
+
+The region command defines a geometric region in space.
+
+```
+region        region1 block 0 10 0 10 0 10
+```
+
+The arguments are `region1`, a name we give to the region, `block`, the type of region (cuboid), and the numbers are the low and high values for x, y, and z.
+
+We then create a box with one atom type, using the region we defined previously
+
+```
+create_box    1 region1
+```
+
+And finally, we create the atoms in the box, using the box and lattice previously created
+
+```
+create_atoms  1 box
+```
 
 
 
 
 
 
-{% include figure.html url="" max-width="80%" file="/fig/2_MD-primer/how_md_works.png" alt="How MD Works" %}
 
 
 
 
 
+[comment]: # (move whole file somewhere else?)
+```
+####################################
+# Example LAMMPS input script      #
+# for a simple Lennard Jones fluid #
+####################################
+
+####################################
+# 1) Set up simulation box
+#   - We set a 3D periodic box
+#   - Our box has 10x10x10 atom 
+#     positions, evenly distributed
+#   - The atom starting sites are
+#     separated such that the box
+#     density is 0.6
+####################################
+
+units         lj
+atom_style    atomic
+dimension     3
+boundary      p p p
+
+lattice       sc 0.60
+region        region1 block 0 10 0 10 0 10
+create_box    1 region1
+create_atoms  1 box
+
+####################################
+# 2) Define interparticle interactions
+#   - Here, we use truncated & shifted LJ
+#   - All atoms of type 1 (in this case, all atoms)
+#     have a mass of 1.0
+####################################
+
+pair_style  lj/cut 3.5
+pair_modify shift yes
+pair_coeff  1 1 1.0 1.0
+mass        1 1.0
+
+####################################
+# 3) Neighbour lists
+#   - Each atom will only consider neighbours
+#     within a distance of 2.8 of each other
+#   - The neighbour lists are recalculated
+#     every timestep
+####################################
+
+neighbor        0.3 bin
+neigh_modify    delay 10 every 1
+
+####################################
+# 4) Define simulation parameters
+#   - We fix the temperature and 
+#     linear and angular momenta
+#     of the system 
+#   - We run with fixed number (n),
+#     volume (v), temperature (t)
+####################################
+
+fix     LinMom all momentum 50 linear 1 1 1 angular
+fix     1 all nvt temp 1.00 1.00 5.0
+#fix    1 all npt temp 1.0 1.0 25.0 iso 1.5150 1.5150  10.0
+
+####################################
+# 5) Final setup
+#   - Define starting particle velocity
+#   - Define timestep
+#   - Define output system properties (temp, energy, etc.)
+#   - Define simulation length
+####################################
+
+velocity      all create 1.0 199085 mom no
+
+timestep      0.005
+
+thermo_style  custom step temp etotal pe ke press vol density
+thermo        500
+
+run_style     verlet
+
+run           50000
+```
 
 
-
-
-
-
-
-
-
-# old
-
+# advanced lammps course stuff (for reference)
 
 The `in.ethanol` LAMMPS input that we are using for this exercise is an 
 easily edited benchmark script used within EPCC to test system performance. 

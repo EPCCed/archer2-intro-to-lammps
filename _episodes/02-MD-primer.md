@@ -251,11 +251,53 @@ neigh_modify    delay 10 every 1
 ## Simulation parameters
 
 
+Now that we set up the initial conditions for the simulation, and changed some settings to make sure it runs a bit faster, all that is left is telling LAMMPS exactly how we want the simulation to be.
+This includes, but is not limited to, what ensemble to use (and which particles to apply it to), how bit is the timestep, how many timesteps we want to simulate, what properties we want as output, and how often.
+
+The `fix` command has myriad options, most of them related to 'setting' certain properties at a value, or in an interval of values for one, all, or some particles in the simulation.
+
+The first keywords are always `ID` -- a name to reference the fix by, and `group-ID` -- which particles to apply the command to.
+The most common option for the second keyword is `all`.
+
+```
+fix     1 all nvt temp 1.00 1.00 5.0
+```
+
+Then we have the styles plus the arguments.
+In the case above, the style is `nvt`, and the arguments are the temperatures at the start and end of the simulation run (`Tstart` and `Tstop`), and the temperature damping parameter (`Tdamp`), in time units.
+[comment]: # (A Nose-Hoover thermostat will not work well for arbitrary values of Tdamp. If Tdamp is too small, the temperature can fluctuate wildly; if it is too large, the temperature will take a very long time to equilibrate. A good choice for many models is a Tdamp of around 100 timesteps. Note that this is NOT the same as 100 time units for most units settings.)
+
+Another example of what a `fix` can do, is set a property (in this case, momentum), to a certain value:
+
 ```
 fix     LinMom all momentum 50 linear 1 1 1 angular
 ```
+
+This zeroes the linear momenta of all particles in all directions, as well as the angular momentum.
+
+
+
 ```
-fix     1 all nvt temp 1.00 1.00 5.0
+velocity      all create 1.0 199085 mom no
+```
+
+```
+timestep      0.005
+```
+
+```
+thermo_style  custom step temp etotal pe ke press vol density
+```
+```
+thermo        500
+```
+
+```
+run_style     verlet
+```
+
+```
+run           50000
 ```
 
 

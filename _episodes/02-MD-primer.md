@@ -275,30 +275,69 @@ fix     LinMom all momentum 50 linear 1 1 1 angular
 
 This zeroes the linear momenta of all particles in all directions, as well as the angular momentum.
 
+## Final setup
 
 
+Although we created a number of particles in a box, if we were to run a simulation, not much would happen, because these particles do not have any starting velocities.
+To change this, we use the `velocity` command, which generates an ensemble of velocities for the particles in the chosen group (in this case, `all`):
+
+[comment]: # (JS says gaussian in video, but default is uniform)
 ```
 velocity      all create 1.0 199085 mom no
 ```
+
+The arguments after the `create` stype are the _temperature_ and _seed number_.
+The `mom no` keyword/value pair prevents LAMMPS from zero-ing the linear momenta from the system.
+[comment]: # (this seems to be opposite what we want, according to video)
+
+Then we set the size of the timestep, in whatever units we have chosen for this simulation -- in this case, LJ units.
 
 ```
 timestep      0.005
 ```
 
+The size of the timestep is a careful juggling of speed vs. accuracy.
+A small timestep guarantees that no particle interactions are missing, at the cost of a lot of computation time.
+A large timestep allows for simulations that probe effects at long time scales, but risks a particle moving so much in each timestep, that some interactions are missed -- in extreme cases, some particles can 'fly' right through each other.
+The 'happy medium' depends on the system type, size, and temperature, and can be estimated from the average diffusion of the particles.
+
+The next line sets what thermodynamic information we want LAMMPS to output to the terminal and the log file.
+
 ```
 thermo_style  custom step temp etotal pe ke press vol density
 ```
+
+There are several default styles, and the `custom` style allows for full customization of which fields and in which order to write them.
+To choose how often to write these fields, the command is:
+
 ```
 thermo        500
 ```
+
+To force LAMMPS to use the verlet algorithm (rather than the default velocity-verlet), we use:
 
 ```
 run_style     verlet
 ```
 
+And finally, we choose how many timesteps (**not time-units**) to run the simulation for:
+
 ```
 run           50000
 ```
+
+
+1h30-ish
+more topics:
+
+- logfile
+- fix numbers
+- dump command and file
+- vmd visualization
+- other packages - ovito, mdanalysis, pylat, packmol, topotools
+- MSC, RDF, VACF
+- variables
+
 
 
 [comment]: # (move whole file somewhere else?)

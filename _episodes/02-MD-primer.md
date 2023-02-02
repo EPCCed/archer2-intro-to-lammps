@@ -17,6 +17,7 @@ Everything we are covering today (and a lot of other info) can be found in the [
 
 # Running LAMMPS on ARCHER2
 
+[comment]: # (add image w/ login/compute nodes and filesystem explanation)
 ARCHER2 uses a module system. In general, you can run LAMMPS on ARCHER2 by using the LAMMPS module:
 
 ```bash
@@ -541,13 +542,60 @@ An, arguably, better solution is to write a data file, which not only is a text 
 write_data  lj.equil.data
 ```
 
+## Variables and loops
+
+LAMMPS input scripts can be quite complex, and it can be useful to run the same script many times with only a small difference (for example, temperature).
+For this reason, LAMMPS have implemented variables and loops -- but this doesn't mean that we can only use variables *with* loops.
+
+A variable in LAMMPS is defined with the keyword `variable`, then a `name`, and then style and arguments, for example:
+
+```
+variable temperature equal 1.0
+```
+
+There are several styles (see the manual), but of note are `delete`, `index`, `loop`, and `equal`.
+`equal` is the workhorse of the styles, and it can set a variable to a number, thermo keywords, math operators or functions, among other things.
+`delete` unsets a variable.
+`loop` and `index` are simular, with the difference that `loop` accepts an integer / range, while `index` accepts a list of strings.
+
+To use a variable later in the script, just prepend a dollar sign, like so:
+
+```
+fix     1 all nvt temp $temperature $temperature 5.0
+```
+
+Example of loop:
+
+```
+variable a loop 10
+label loop
+dump 1 all atom 100 file.$a
+run 10000
+undump 1
+next a
+jump SELF loop
+```
+
+and of `index`:
+
+```
+variable d index run1 run2 run3 run4 run5 run6 run7 run8
+label loop
+shell cd $d
+read_data data.polymer
+run 10000
+shell cd ..
+clear
+next d
+jump SELF
+```
 
 
 
 1h30-ish
 more topics:
 
-- vmd visualization
+- vmd visualization (maybe better as a demonstration?)
 - other packages - ovito, mdanalysis, pylat, packmol, topotools
 - variables
 

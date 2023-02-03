@@ -17,15 +17,23 @@ Everything we are covering today (and a lot of other info) can be found in the [
 
 ## Running LAMMPS on ARCHER2
 
-[comment]: # (add image w/ login/compute nodes and filesystem explanation)
+[comment]: # (add image w/ login/compute nodes and file system explanation)
 ARCHER2 uses a module system. In general, you can run LAMMPS on ARCHER2 by using the LAMMPS module:
 
 ```bash
-ta058js@ln03:~> module avail lammps
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+     Versions:
+        lammps/13_Jun_2022
+        lammps/23_Jun_2022
+        lammps/29_Sep_2021
 
-------------------- /work/y07/shared/archer2-lmod/apps/core -------------------
-   lammps/29_Sep_2021
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+  For detailed information about a specific "lammps" package (including how to load the modules) use the module's full name.
+  Note that names that have a trailing (E) are extensions provided by other modules.
+  For example:
 
+     $ module spider lammps/29_Sep_2021
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ```
 
 Running `module load lammps` will set up your environment to use LAMMPS.
@@ -51,7 +59,10 @@ Note that you will only be able to run this on a single core on the ARCHER2 logi
 ### Submitting a job to the compute nodes
 
 To run LAMMPS on multiple cores/nodes, you will need to submit a job to the ARCHER2 compute nodes.
-The compute nodes do not have access to the landing `home` filesystem -- this filesystem is to store useful/important information.
+The compute nodes do not have access to the landing `home` file system -- this file system is to store useful/important information.
+
+{% include figure.html url="" max-width="80%" file="/fig/2_MD-primer/archer2_architecture.png" alt="ARCHER2 architecture" %}
+
 On ARCHER2, when submitting jobs to the compute nodes, make sure that you are in your `/work/ta058/ta058/<username>` directory.
 
 For this course, we have prepared a number of exercises.
@@ -76,7 +87,7 @@ In this directory you will find three files:
 
 ## What is Molecular Dynamics
 
-Molecular Dynamics is, simply, the application of Newtown's laws of motion to systems of particles that can range in size from atoms, course-grained moieties, entire molecules, or even grains of sand.
+Molecular Dynamics is, simply, the application of Newton's laws of motion to systems of particles that can range in size from atoms, course-grained moieties, entire molecules, or even grains of sand.
 In practical terms, any MD software follows the same basic steps:
 
   1. Take the initial positions of the particles in the simulation box and calculate the total force that apply to each particle, using the chosen force-field.
@@ -106,7 +117,7 @@ units         lj
 [comment]: # (link?)
 LAMMPS has several different unit styles, useful in different types of simulations.
 In this example, we are using `lj`, or Lennard-Jones units.
-These are dimentionless units, that are defined on the LJ potential parameters.
+These are dimensionless units, that are defined on the LJ potential parameters.
 They are computationally advantageous because they're usually close to unity, and required less precise (lower number of bits) floating point variables -- which in turn reduced the memory requirements, and increased calculation speed.
 
 The next line defines what style of `atoms` (LAMMPS's terminology is for particle) to use.
@@ -119,15 +130,15 @@ This impacts on what attributes each atom has associated with it -- this cannot 
 Every style stores: coordinates, velocities, atom IDs, and atom types.
 The `atomic` style doesn't add any further attributes.
 
-We then choose 3 dimentions.
+We then choose 3 dimensions.
 
 ```
 dimension     3
 ```
 
-LAMMPS is also capable of simulating two-dimentional systems.
+LAMMPS is also capable of simulating two-dimensional systems.
 
-The boundary command sets the styles for the boudaries for the simulation box.
+The boundary command sets the styles for the boundaries for the simulation box.
 
 ```
 boundary      p p p
@@ -140,7 +151,7 @@ Other boundary conditions are available (fixed, shrink-wrapped, and shrink-wrapp
 {% include figure.html url="" max-width="80%" file="/fig/2_MD-primer/PBC.png" alt="Periodic Boundary Conditions" %}
 
 Periodic boundary conditions allow the approximation of an infinite system by simulating only a small part, a unit-cell.
-The most common shapes of (3D) unit-cell is cuboidal, but any shape that completely tesselates 3D space can be used.
+The most common shapes of (3D) unit-cell is cuboidal, but any shape that completely tessellates 3D space can be used.
 The topology of PBCs is such that a particle leaving one side of the unit cell, it reappears on the other side.
 A 2D map with PBC could be perfectly mapped to a torus.
 
@@ -148,7 +159,7 @@ Another key aspect of using PBCs is the use of **minimum-image convention** for 
 This guarantees that each particle interacts only with the closest *image* of another particle, no matter with unit-cell (the original simulation box or one of the periodic images) it belongs to.
 
 
-The lattice command defines a set of points in space, where sc is simple cubic.
+The lattice command defines a set of points in space, where `sc` is simple cubic.
 
 ```
 lattice       sc 0.60
@@ -193,8 +204,8 @@ pair_style  lj/cut 3.5
 ```
 
 In this case, Lennard-Jones interactions, cut at 3.5 Å.
-Cutting the interactions at a certain distance (as oppposed to calculating interactions up to an 'infinite' distance, drastically reduces the computation time.
-This approximation is only valid because the LJ potential is assymptotic to zero at high *d* distance between particles.
+Cutting the interactions at a certain distance (as opposed to calculating interactions up to an 'infinite' distance, drastically reduces the computation time.
+This approximation is only valid because the LJ potential is asymptotic to zero at high *d* distance between particles.
 
 [comment]: # (side by side?)
 {% include figure.html url="" max-width="80%" file="/fig/2_MD-primer/dist.png" alt="Distance between particles" %}
@@ -229,12 +240,12 @@ For example, LAMMPS has functions to simulate bonds, angles, dihedrals, improper
 ### Neighbour lists
 
 To improve simulation performance, and because we are truncating interactions at a certain distance, we can keep a list of particles that are close to each other (under a neighbour cutoff distance).
-This reduces the number of comparisons needed per timestep, at the cost of a small amount of memory.
+This reduces the number of comparisons needed per time-step, at the cost of a small amount of memory.
 
 {% include figure.html url="" max-width="80%" file="/fig/2_MD-primera/cutoff.png" alt="Neighbour lists" %}
 
-So we can add a 0.3σ distance to our neight cutoff, above the LJ cutoff, so a total of 3.8σ.
-The `bin` keyword refers to the algorithm used to build the list, `bin` is the best performing one for systems with homogenous sizes of particles.
+So we can add a 0.3σ distance to our neighbour cutoff, above the LJ cutoff, so a total of 3.8σ.
+The `bin` keyword refers to the algorithm used to build the list, `bin` is the best performing one for systems with homogeneous sizes of particles.
 
 ```
 neighbor        0.3 bin
@@ -242,7 +253,7 @@ neighbor        0.3 bin
 
 However, these lists need to be updated periodically, essentially more often than it takes for a particle to move neighbour_cutoff - LJ_cutoff.
 This is what the next command does.
-The `delay` parameter sets the minimum number of timesteps that need to pass since the last neighbour list rebuild for LAMMPS to even consider rebuilding it again.
+The `delay` parameter sets the minimum number of time-steps that need to pass since the last neighbour list rebuild for LAMMPS to even consider rebuilding it again.
 The `every` parameter tells LAMMPS to attempt to build the neighbour list if `number_time_step mod every = 0` -- by default, the rebuild will only be triggered if an atom has moved more than half the neighbour skin distance (the 0.3 above)
 
 ```
@@ -253,7 +264,7 @@ neigh_modify    delay 10 every 1
 
 
 Now that we set up the initial conditions for the simulation, and changed some settings to make sure it runs a bit faster, all that is left is telling LAMMPS exactly how we want the simulation to be.
-This includes, but is not limited to, what ensemble to use (and which particles to apply it to), how bit is the timestep, how many timesteps we want to simulate, what properties we want as output, and how often.
+This includes, but is not limited to, what ensemble to use (and which particles to apply it to), how bit is the time-step, how many time-steps we want to simulate, what properties we want as output, and how often.
 
 The `fix` command has myriad options, most of them related to 'setting' certain properties at a value, or in an interval of values for one, all, or some particles in the simulation.
 
@@ -266,7 +277,7 @@ fix     1 all nvt temp 1.00 1.00 5.0
 
 Then we have the styles plus the arguments.
 In the case above, the style is `nvt`, and the arguments are the temperatures at the start and end of the simulation run (`Tstart` and `Tstop`), and the temperature damping parameter (`Tdamp`), in time units.
-[comment]: # (A Nose-Hoover thermostat will not work well for arbitrary values of Tdamp. If Tdamp is too small, the temperature can fluctuate wildly; if it is too large, the temperature will take a very long time to equilibrate. A good choice for many models is a Tdamp of around 100 timesteps. Note that this is NOT the same as 100 time units for most units settings.)
+[comment]: # (A Nose-Hoover thermostat will not work well for arbitrary values of `Tdamp`. If `Tdamp` is too small, the temperature can fluctuate wildly; if it is too large, the temperature will take a very long time to equilibrate. A good choice for many models is a `Tdamp` of around 100 time-steps. Note that this is NOT the same as 100 time units for most units settings.)
 
 Another example of what a `fix` can do, is set a property (in this case, momentum), to a certain value:
 
@@ -287,19 +298,19 @@ To change this, we use the `velocity` command, which generates an ensemble of ve
 velocity      all create 1.0 199085 mom no
 ```
 
-The arguments after the `create` stype are the _temperature_ and _seed number_.
+The arguments after the `create` style are the _temperature_ and _seed number_.
 The `mom no` keyword/value pair prevents LAMMPS from zero-ing the linear momenta from the system.
 [comment]: # (this seems to be opposite what we want, according to video)
 
-Then we set the size of the timestep, in whatever units we have chosen for this simulation -- in this case, LJ units.
+Then we set the size of the time-step, in whatever units we have chosen for this simulation -- in this case, LJ units.
 
 ```
 timestep      0.005
 ```
 
-The size of the timestep is a careful juggling of speed vs. accuracy.
-A small timestep guarantees that no particle interactions are missing, at the cost of a lot of computation time.
-A large timestep allows for simulations that probe effects at long time scales, but risks a particle moving so much in each timestep, that some interactions are missed -- in extreme cases, some particles can 'fly' right through each other.
+The size of the time-step is a careful juggling of speed vs. accuracy.
+A small time-step guarantees that no particle interactions are missing, at the cost of a lot of computation time.
+A large time-step allows for simulations that probe effects at long time scales, but risks a particle moving so much in each time-step, that some interactions are missed -- in extreme cases, some particles can 'fly' right through each other.
 The 'happy medium' depends on the system type, size, and temperature, and can be estimated from the average diffusion of the particles.
 
 The next line sets what thermodynamic information we want LAMMPS to output to the terminal and the log file.
@@ -308,20 +319,20 @@ The next line sets what thermodynamic information we want LAMMPS to output to th
 thermo_style  custom step temp etotal pe ke press vol density
 ```
 
-There are several default styles, and the `custom` style allows for full customization of which fields and in which order to write them.
+There are several default styles, and the `custom` style allows for full customisation of which fields and in which order to write them.
 To choose how often to write these fields, the command is:
 
 ```
 thermo        500
 ```
 
-To force LAMMPS to use the verlet algorithm (rather than the default velocity-verlet), we use:
+To force LAMMPS to use the Verlet algorithm (rather than the default velocity-Verlet), we use:
 
 ```
 run_style     verlet
 ```
 
-And finally, we choose how many timesteps (**not time-units**) to run the simulation for:
+And finally, we choose how many time-steps (**not time-units**) to run the simulation for:
 
 ```
 run           50000
@@ -331,7 +342,7 @@ run           50000
 ## Log file
 
 The logfile is where we can find thermodynamic information of interest.
-By default, the log file name that lammps creates, and which to it writes all the info that shows on the terminal, is `log.lammps`.
+By default, the log file name that LAMMPS creates, and which to it writes all the info that shows on the terminal, is `log.lammps`.
 To change that, we could use the command:
 
 ```
@@ -351,7 +362,7 @@ The thermodynamic data, which we setup with the `thermo` and `thermo_style` comm
     2000   0.93942595   -2.5817381   -3.9894679    1.4077298  -0.31689463    1666.6667          0.6
 ```
 
-At the start, we get a header with the column names, and then a line for each timestep that's a multiple of the value we set `thermo` to.
+At the start, we get a header with the column names, and then a line for each time-step that's a multiple of the value we set `thermo` to.
 In this example, because we're running an NVT simulation, both the simulation box volume, and the particle density are constant, but using other ensembles that would change.
 At the end of each `run` command, we get the analysis of how the simulation time is spent:
 
@@ -385,7 +396,7 @@ Dangerous builds = 4995
 ```
 
 The data here presented is very important, and can help you substantially improve the speed at which your simulations run.
-The first line gives us the details of the last `run` command - how many seconds it took, on how many processes it ran on, how many timesteps, and how many atoms.
+The first line gives us the details of the last `run` command - how many seconds it took, on how many processes it ran on, how many time-steps, and how many atoms.
 This can be useful to compare between different systems.
 
 Then we get some benchmark information:
@@ -395,7 +406,7 @@ Performance: 1347185.752 tau/day, 3118.486 timesteps/s
 96.6% CPU use with 8 MPI tasks x 8 OpenMP threads
 ```
 
-How many time units per day / how many timesteps per second.
+How many time units per day / how many time-steps per second.
 And how much of the available CPU resources LAMMPS was able to use, with how many MPI tasks and OpenMP threads.
 
 The next table shows a breakdown of the time spent on each task by the MPI library.
@@ -412,7 +423,7 @@ Modify  | 1.278      | 1.6491     | 1.8464     |  16.7 | 10.29
 Other   |            | 0.2068     |            |       |  1.29
 ```
 
-The `Pair` line refers to non-bonded force computations, `Bond` includes all bonded interactions, including angles, dihedrals, and impropers, `Kspace` relates to long-range interactions (Ewald, PPPM or MSM), `Neigh` is the contruction of neighbour lists, Comm is inter-processor communication (AKA, parallelization overhead), `Output` is the writing of files (log and dump files), `Modify` is the fixes and computes invoked by fixes, and `Other` is everything else.
+The `Pair` line refers to non-bonded force computations, `Bond` includes all bonded interactions, including angles, dihedrals, and impropers, `Kspace` relates to long-range interactions (Ewald, PPPM or MSM), `Neigh` is the construction of neighbour lists, Comm is inter-processor communication (AKA, parallelisation overhead), `Output` is the writing of files (log and dump files), `Modify` is the fixes and computes invoked by fixes, and `Other` is everything else.
 Each category shows a breakdown of the least, average, and most amount of wall time any processor spent on each category -- large variability in this (calculated as %varavg) could show that the atom distribution between processors is not optimal.
 The final column, %total, is the percentage of the loop time spent in the category.
 
@@ -431,7 +442,7 @@ Total wall time: 0:00:16
 
 ## Advanced input commands
 
-LAMMPS has a very powerful suite for calculating, and outputing all kinds of physical properties during the simulation.
+LAMMPS has a very powerful suite for calculating, and outputting all kinds of physical properties during the simulation.
 Calculations are most often under a `compute` command, and then the output is handled by a `fix` command.
 As an example, we will now see three examples, but there are (at the time of writing) over 150 different `compute` commands with many options each).
 
@@ -444,18 +455,18 @@ compute        RDF all rdf 150 cutoff 3.5
 fix            RDF_OUTPUT all ave/time 25 100 5000 c_RDF[*] file rdf_lj.out mode vector
 ```
 
-The compute command is instantaneous, that is, they calculate the values for the current timestep, but that doesn't mean they calculate quantities every timestep.
+The compute command is instantaneous, that is, they calculate the values for the current time-step, but that doesn't mean they calculate quantities every time-step.
 A compute only calculates quantities when needed, _i.e._, when called by another command.
 In this case, the `fix ave/time` command, that averages a quantity over time, and outputs it over a long timescale.
 The parameters are: `RDF_OUTPUT` is the name of the fix, `all` is the group of particles it applies to, `ave/time` is the style of fix (there are many others).
 Then, the group of three numbers `25 100 5000` are the `Nevery`, `Nrepeat`, `Nfreq` arguments.
-These can be quite tricky to understand, as they interplay with eachother.
-`Nfreq` is how often a value is written to file, `Nrepeat` is how many sets of values we want to average over (number of samples), and `Nevery` is how many timesteps in between samples.
-So, for example, an `Nevery` of 2, with `Nrepeat` of 3, and `Nfreq` of 100 means that at every timestep multiple of 100, there will be an average written to file, that was calculated by taking 3 samples, 2 timesteps appart -- _i.e._, timesteps 96, 98, and 100 are averaged, and the average is written to file, and the same at timesteps 196, 198, and 200, etc.
-In this case, we take a sample every 25 timesteps, 100 times, and output at timestep number 5000 -- so from timestep 2500 to 5000, sampling every 25 timesteps.
+These can be quite tricky to understand, as they interplay with each other.
+`Nfreq` is how often a value is written to file, `Nrepeat` is how many sets of values we want to average over (number of samples), and `Nevery` is how many time-steps in between samples.
+So, for example, an `Nevery` of 2, with `Nrepeat` of 3, and `Nfreq` of 100 means that at every time-step multiple of 100, there will be an average written to file, that was calculated by taking 3 samples, 2 time-steps apart -- _i.e._, time-steps 96, 98, and 100 are averaged, and the average is written to file, and the same at time-steps 196, 198, and 200, etc.
+In this case, we take a sample every 25 time-steps, 100 times, and output at time-step number 5000 -- so from time-step 2500 to 5000, sampling every 25 time-steps.
 This means that `Nfreq` must be a multiple of `Nevery`, and `Nevery` must be non-zero even if `Nrepeat = 1`.
 The following argument, `c_RDF[*]`, is the quantity to be averaged over.
-The beggining `c_` indicates this is a compute ID, and the `[*]` wildcard in conjunction with `mode vector` makes the fix calculate the average for all the columns in the compute ID.
+The beginning `c_` indicates this is a compute ID, and the `[*]` wildcard in conjunction with `mode vector` makes the fix calculate the average for all the columns in the compute ID.
 Finally, the `file rdf_lj.out` argument tells LAMMPS where to write the data to.
 This file looks something like this:
 
@@ -473,7 +484,7 @@ This file looks something like this:
 ...
 ```
 
-> ## yaml output
+> ## YAML output
 >
 > Since version 4May2022 of LAMMPS, writing to YAML files support was added.
 > To write a YAML file, just change the extension accordingly `file rdf_lj.yaml`.
@@ -502,7 +513,7 @@ fix            MSD_OUTPUT all ave/correlate 1 5000 5000 c_MSD[*] file msd_lj.out
 ```
 
 [comment]: # (never done MSD or time correlations, this needs some more explaining)
-The `fix` is then taking a sample every timestep, and at timesteps divisible by 5000 it calculates the time correlation and writes it down to file (so, we get two values, at the start of the run, and end of the run).
+The `fix` is then taking a sample every time-step, and at time-steps divisible by 5000 it calculates the time correlation and writes it down to file (so, we get two values, at the start of the run, and end of the run).
 
 And the final example is a velocity auto-correlation function
 
@@ -512,7 +523,7 @@ fix            VACF_OUTPUT all ave/correlate 1 2500 5000 c_VACF[*] file vacf_lj.
 ```
 
 [comment]: # (ditto from what I said about MSD)
-Here the fix is taking 2500 samples from timestep 2501 to 5000.
+Here the fix is taking 2500 samples from time-step 2501 to 5000.
 
 The `dump` command allows to write trajectory files -- files that have the coordinates (and sometimes other properties) of each particle at a regular interval.
 These are important to create visual representations of the evolution of the simulation (AKA molecular movies) or to allow for the calculation of properties after the simulation is done, without the need to re-run the simulation.
@@ -523,11 +534,11 @@ dump_modify    2 sort id
 ```
 
 The `dump` command has id `2`, and will output information for `all` particles.
-The style is `custom`, and will write to file `positions.lammpstrj` every `1000` timesteps.
+The style is `custom`, and will write to file `positions.lammpstrj` every `1000` time-steps.
 The `custom` style is configurable, and we request that each atom has the following properties written to file: atom `id`, positions in the 3 directions, and velocity magnitudes in the 3 directions.
 The `dump_modify` command makes sure that the atoms are written in order of `id`, rather than in whatever order they happen to get calculated.
 
-Finally, we tell LAMMPS to run this section (with the computes and fixes) for `5000` timesteps.
+Finally, we tell LAMMPS to run this section (with the computes and fixes) for `5000` time-steps.
 
 ```
 run            5000
@@ -540,7 +551,7 @@ This binary file contains information about system topology, force-fields, but n
 write_restart  restart2.lj.equil
 ```
 
-An, arguably, better solution is to write a data file, which not only is a text file, but can then be used without restrictions in a different hardware configuration, or even LAMMPS version.
+An arguably better solution is to write a data file, which not only is a text file, but can then be used without restrictions in a different hardware configuration, or even LAMMPS version.
 
 ```
 write_data  lj.equil.data
@@ -558,9 +569,9 @@ variable temperature equal 1.0
 ```
 
 There are several styles (see the manual), but of note are `delete`, `index`, `loop`, and `equal`.
-`equal` is the workhorse of the styles, and it can set a variable to a number, thermo keywords, math operators or functions, among other things.
+`equal` is the workhorse of the styles, and it can set a variable to a number, `thermo` keywords, maths operators or functions, among other things.
 `delete` unsets a variable.
-`loop` and `index` are simular, with the difference that `loop` accepts an integer / range, while `index` accepts a list of strings.
+`loop` and `index` are similar, with the difference that `loop` accepts an integer / range, while `index` accepts a list of strings.
 
 To use a variable later in the script, just prepend a dollar sign, like so:
 
@@ -599,7 +610,7 @@ jump SELF
 1h30-ish
 more topics:
 
-- vmd visualization (maybe better as a demonstration?)
+- VMD visualisation (maybe better as a demonstration?)
 - other packages - ovito, mdanalysis, pylat, packmol, topotools
 - variables
 

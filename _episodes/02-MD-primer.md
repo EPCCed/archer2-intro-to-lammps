@@ -474,11 +474,11 @@ This file looks something like this:
 ```
 
 > ## yaml output
-
+>
 > Since version 4May2022 of LAMMPS, writing to YAML files support was added.
 > To write a YAML file, just change the extension accordingly `file rdf_lj.yaml`.
 > The file will then be in YAML format:
-
+>
 > ```
 > # Time-averaged data for fix RDF_OUTPUT_YAML
 > # TimeStep Number-of-rows
@@ -606,13 +606,13 @@ more topics:
 [comment]: # (move whole file somewhere else?)
 
 > ## input file
-
+>
 > ```
 > ####################################
 > # Example LAMMPS input script      #
 > # for a simple Lennard Jones fluid #
 > ####################################
-
+>
 > ####################################
 > # 1) Set up simulation box
 > #   - We set a 3D periodic box
@@ -622,29 +622,29 @@ more topics:
 > #     separated such that the box
 > #     density is 0.6
 > ####################################
-
+>
 > units         lj
 > atom_style    atomic
 > dimension     3
 > boundary      p p p
-
+>
 > lattice       sc 0.60
 > region        region1 block 0 10 0 10 0 10
 > create_box    1 region1
 > create_atoms  1 box
-
+>
 > ####################################
 > # 2) Define interparticle interactions
 > #   - Here, we use truncated & shifted LJ
 > #   - All atoms of type 1 (in this case, all atoms)
 > #     have a mass of 1.0
 > ####################################
-
+>
 > pair_style  lj/cut 3.5
 > pair_modify shift yes
 > pair_coeff  1 1 1.0 1.0
 > mass        1 1.0
-
+>
 > ####################################
 > # 3) Neighbour lists
 > #   - Each atom will only consider neighbours
@@ -652,10 +652,10 @@ more topics:
 > #   - The neighbour lists are recalculated
 > #     every timestep
 > ####################################
-
+>
 > neighbor        0.3 bin
 > neigh_modify    delay 10 every 1
-
+>
 > ####################################
 > # 4) Define simulation parameters
 > #   - We fix the temperature and 
@@ -664,11 +664,11 @@ more topics:
 > #   - We run with fixed number (n),
 > #     volume (v), temperature (t)
 > ####################################
-
+>
 > fix     LinMom all momentum 50 linear 1 1 1 angular
 > fix     1 all nvt temp 1.00 1.00 5.0
 > #fix    1 all npt temp 1.0 1.0 25.0 iso 1.5150 1.5150  10.0
-
+>
 > ####################################
 > # 5) Final setup
 > #   - Define starting particle velocity
@@ -676,23 +676,23 @@ more topics:
 > #   - Define output system properties (temp, energy, etc.)
 > #   - Define simulation length
 > ####################################
-
+>
 > velocity      all create 1.0 199085 mom no
-
+>
 > timestep      0.005
-
+>
 > thermo_style  custom step temp etotal pe ke press vol density
 > thermo        500
-
+>
 > run_style     verlet
-
+>
 > run           50000
 > ```
 {: .solution}
 
 
 > ## output file
-
+>
 > ```
 > LAMMPS (29 Sep 2021 - Update 2)
 >   using 8 OpenMP thread(s) per MPI task
@@ -700,7 +700,7 @@ more topics:
 > # Example LAMMPS input script      #
 > # for a simple Lennard Jones fluid #
 > ####################################
-
+>
 > ####################################
 > # 1) Set up simulation box
 > #   - We set a 3D periodic box
@@ -710,12 +710,12 @@ more topics:
 > #     separated such that the box
 > #     density is 0.6
 > ####################################
-
+>
 > units         lj
 > atom_style    atomic
 > dimension     3
 > boundary      p p p
-
+>
 > lattice       sc 0.60
 > Lattice spacing in x,y,z = 1.1856311 1.1856311 1.1856311
 > region        region1 block 0 10 0 10 0 10
@@ -726,19 +726,19 @@ more topics:
 > Created 1000 atoms
 >   using lattice units in orthogonal box = (0.0000000 0.0000000 0.0000000) to (11.856311 11.856311 11.856311)
 >   create_atoms CPU = 0.003 seconds
-
+>
 > ####################################
 > # 2) Define interparticle interactions
 > #   - Here, we use truncated & shifted LJ
 > #   - All atoms of type 1 (in this case, all atoms)
 > #     have a mass of 1.0
 > ####################################
-
+>
 > pair_style  lj/cut 3.5
 > pair_modify shift yes
 > pair_coeff  1 1 1.0 1.0
 > mass        1 1.0
-
+>
 > ####################################
 > # 3) Neighbour lists
 > #   - Each atom will only consider neighbours
@@ -746,10 +746,10 @@ more topics:
 > #   - The neighbour lists are recalculated
 > #     every timestep
 > ####################################
-
+>
 > neighbor        0.3 bin
 > neigh_modify    delay 10 every 2
-
+>
 > ####################################
 > # 4) Define simulation parameters
 > #   - We fix the temperature and
@@ -758,11 +758,11 @@ more topics:
 > #   - We run with fixed number (n),
 > #     volume (v), temperature (t)
 > ####################################
-
+>
 > fix     LinMom all momentum 50 linear 1 1 1 angular
 > fix     1 all nvt temp 1.00 1.00 5.0
 > #fix    1 all npt temp 1.0 1.0 25.0 iso 1.5150 1.5150  10.0
-
+>
 > ####################################
 > # 5) Final setup
 > #   - Define starting particle velocity
@@ -770,16 +770,16 @@ more topics:
 > #   - Define output system properties (temp, energy, etc.)
 > #   - Define simulation length
 > ####################################
-
+>
 > velocity      all create 1.0 199085 mom no
-
+>
 > timestep      0.005
-
+>
 > thermo_style  custom step temp etotal pe ke press vol density
 > thermo        500
-
+>
 > run_style     verlet
-
+>
 > run           50000
 > Neighbor list info ...
 >   update every 2 steps, delay 10 steps, check yes
@@ -897,10 +897,10 @@ more topics:
 >    49500   0.98703023   -2.4853156   -3.9643804    1.4790648 -0.026615225    1666.6667          0.6
 >    50000    1.0031671   -2.4845102   -3.9877561     1.503246 -0.077383309    1666.6667          0.6
 > Loop time of 16.0334 on 64 procs for 50000 steps with 1000 atoms
-
+>
 > Performance: 1347185.752 tau/day, 3118.486 timesteps/s
 > 96.6% CPU use with 8 MPI tasks x 8 OpenMP threads
-
+>
 > MPI task timing breakdown:
 > Section |  min time  |  avg time  |  max time  |%varavg| %total
 > ---------------------------------------------------------------
@@ -910,14 +910,14 @@ more topics:
 > Output  | 0.016128   | 0.0197     | 0.032095   |   3.5 |  0.12
 > Modify  | 1.278      | 1.6491     | 1.8464     |  16.7 | 10.29
 > Other   |            | 0.2068     |            |       |  1.29
-
+>
 > Nlocal:        125.000 ave         133 max         114 min
 > Histogram: 1 0 0 2 1 1 0 0 0 3
 > Nghost:        1354.12 ave        1389 max        1322 min
 > Histogram: 1 0 1 2 1 0 0 2 0 1
 > Neighs:        8567.38 ave        9781 max        7536 min
 > Histogram: 1 1 2 0 1 0 0 2 0 1
-
+>
 > Total # of neighbors = 68539
 > Ave neighs/atom = 68.539000
 > Neighbor list builds = 4999

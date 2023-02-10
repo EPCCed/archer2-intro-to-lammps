@@ -154,7 +154,7 @@ For example, LAMMPS has functions to simulate bonds, angles, dihedrals, improper
 To improve simulation performance, and because we are truncating interactions at a certain distance, we can keep a list of particles that are close to each other (under a neighbour cutoff distance).
 This reduces the number of comparisons needed per time-step, at the cost of a small amount of memory.
 
-{% include figure.html url="" max-width="40%" file="/fig/2_MD-primer/cutoff.png" alt="Neighbour lists" %}
+{% include figure.html url="" max-width="30%" file="/fig/2_MD-primer/cutoff.png" alt="Neighbour lists" %}
 
 So we can add a 0.3σ distance to our neighbour cutoff, above the LJ cutoff, so a total of 3.8σ.
 The `bin` keyword refers to the algorithm used to build the list, `bin` is the best performing one for systems with homogeneous sizes of particles.

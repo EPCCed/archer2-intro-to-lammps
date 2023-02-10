@@ -1,5 +1,5 @@
 ---
-layourt: break
+layout: break
 title: "Break"
 break: 30
 ---

@@ -114,7 +114,7 @@ Cutting the interactions at a certain distance (as opposed to calculating intera
 This approximation is only valid because the LJ potential is asymptotic to zero at high *d* distance between particles.
 
 [comment]: # (side by side?)
-<div class="row">
+<div class="row align-items-center">
   <div class="col-md-6" markdown="1">
   {% include figure.html url="" max-width="100%" file="/fig/2_MD-primer/dist.png" alt="Distance between particles" %}
   </div>

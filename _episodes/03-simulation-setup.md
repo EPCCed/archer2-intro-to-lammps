@@ -3,6 +3,12 @@ title: "Setting up a simulation in LAMMPS"
 teaching: 20
 exercises: 30
 questions:
+- "How do we setup a simulation in LAMMPS?"
+objectives:
+- "Understand the commands, keywords, and parameters that are necessary to setup a LAMMPS simulation."
+keypoints:
+- "A LAMMPS input file is a an ordered collection of commands with both mandatory and optional arguments."
+- "To successfully run a LAMMPS simulation, an input file needs to cover basic simulation setup, read/create a system topology, force-field, and type/frequency of outputs."
 ---
 
 ## Simulation setup
@@ -108,9 +114,15 @@ Cutting the interactions at a certain distance (as opposed to calculating intera
 This approximation is only valid because the LJ potential is asymptotic to zero at high *d* distance between particles.
 
 [comment]: # (side by side?)
-{% include figure.html url="" max-width="80%" file="/fig/2_MD-primer/dist.png" alt="Distance between particles" %}
+<div class="row">
+  <div class="col-md-1" markdown="1">
+  {% include figure.html url="" max-width="80%" file="/fig/2_MD-primer/dist.png" alt="Distance between particles" %}
+  </div>
 
-{% include figure.html url="" max-width="80%" file="/fig/2_MD-primer/lj_potential.png" alt="Lennard-Jones potential" %}
+  <div class="col-md-1" markdown="1">
+  {% include figure.html url="" max-width="80%" file="/fig/2_MD-primer/lj_potential.png" alt="Lennard-Jones potential" %}
+  </div>
+</div>
 
 To make sure there is no discontinuity at the cutoff point, we can shift the potential.
 This subtracts the value of the potential at the cutoff point (which should be very low) from the entire function, making the energy at the cutoff equal to zero.
@@ -193,7 +205,7 @@ This zeroes the linear momenta of all particles in all directions, as well as th
 Although we created a number of particles in a box, if we were to run a simulation, not much would happen, because these particles do not have any starting velocities.
 To change this, we use the `velocity` command, which generates an ensemble of velocities for the particles in the chosen group (in this case, `all`):
 
-[comment]: # (JS says gaussian in video, but default is uniform)
+[comment]: # (JS says Gaussian in video, but default is uniform)
 ```
 velocity      all create 1.0 199085 mom no
 ```

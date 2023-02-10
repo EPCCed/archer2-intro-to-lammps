@@ -3,6 +3,15 @@ title: "An introduction to LAMMPS and Molecular Dynamics"
 teaching: 20
 exercises: 0
 questions:
+- "What is LAMMPS?"
+- "How do I run jobs in ARCHER2?"
+- "What are molecular dynamics simulations?"
+objectives:
+- "Understand what LAMMPS is, how to launch jobs on ARCHER2 using the slurm batch system, and what molecular simulations are."
+keypoints:
+- "LAMMPS is a versatile software used in a wide range of subjects to run classical molecular dynamics simulations."
+- "Running jobs on ARCHER2 requires a submission to the Slurm batch system using specific account, budget, queue, and qos keywords."
+- "Molecular dynamics simulations are a method to analyse the physical movement of a system of many particles that are allowed to interact."
 ---
 
 
@@ -17,23 +26,22 @@ Everything we are covering today (and a lot of other info) can be found in the [
 
 ## Running LAMMPS on ARCHER2
 
-[comment]: # (add image w/ login/compute nodes and file system explanation)
 ARCHER2 uses a module system. In general, you can run LAMMPS on ARCHER2 by using the LAMMPS module:
 
 ```bash
-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------------
      Versions:
         lammps/13_Jun_2022
         lammps/23_Jun_2022
         lammps/29_Sep_2021
 
-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------------
   For detailed information about a specific "lammps" package (including how to load the modules) use the module's full name.
   Note that names that have a trailing (E) are extensions provided by other modules.
   For example:
 
      $ module spider lammps/29_Sep_2021
-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------
 ```
 
 Running `module load lammps` will set up your environment to use LAMMPS.
@@ -61,9 +69,9 @@ Note that you will only be able to run this on a single core on the ARCHER2 logi
 To run LAMMPS on multiple cores/nodes, you will need to submit a job to the ARCHER2 compute nodes.
 The compute nodes do not have access to the landing `home` file system -- this file system is to store useful/important information.
 
-{% include figure.html url="" max-width="80%" file="/fig/2_MD-primer/archer2_architecture.png" alt="ARCHER2 architecture" %}
+{% include figure.html url="" max-width="60%" file="/fig/2_MD-primer/archer2_architecture.png" alt="ARCHER2 architecture" %}
 
-On ARCHER2, when submitting jobs to the compute nodes, make sure that you are in your `/work/ta058/ta058/<username>` directory.
+On ARCHER2, when submitting jobs to the compute nodes, make sure that you are in your `/work/ta058/ta058/<username>` directory, as the `/home` file system is not accessible to the compute nodes.
 
 For this course, we have prepared a number of exercises.
 You can get a copy of these exercises by running (make sure to run this from `/work`):

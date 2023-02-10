@@ -1,8 +1,15 @@
 ---
 title: "Running a simulation and understanding the logfile"
 teaching: 20
-exercises: 30
+exercises: 0
 questions:
+- "What information does LAMMPS print to screen/logfile?"
+- "What does that information mean?"
+objectives:
+- "Understand the information that LAMMPS prints to screen / writes to the logfile before, during, and after a simulation."
+keypoints:
+- "Thermodynamic information outputted by LAMMPS can be used to track whether a simulations is running OK."
+- "Performance data at the end of a logfile can give us insights into how to make a simulation faster."
 ---
 
 ## Log file

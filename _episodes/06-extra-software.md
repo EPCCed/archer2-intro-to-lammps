@@ -3,6 +3,13 @@ title: "Additional software"
 teaching: 20
 exercises: 0
 questions:
+- "What other software can I use to prepare input files, and topology files?"
+- "How can I post-process my data?"
+objectives:
+- "Understand how to enhance the workflow around LAMMPS simulations."
+keypoints:
+- "Packmol can be used to pack multiple of the same type of molecules into one topology file."
+- "MDAnalisys is a powerful python library to read, process, and create LAMMPS files."
 ---
 
 more topics:

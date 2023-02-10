@@ -3,6 +3,14 @@ title: "Advanced input and output commands"
 teaching: 20
 exercises: 30
 questions:
+- "How do I calculate a property every N time-steps?"
+- "How do I write a calculated property to file?"
+- "How can I use variables to make my input files easier to change?"
+objectives:
+- "Understand the use of `compute`, `fix`, and variables."
+keypoints:
+- "Using `compute` and `fix` commands, it's possible to calculate myriad properties during a simulation."
+- "Variables make it easier to script several simulations."
 ---
 
 ## Advanced input commands

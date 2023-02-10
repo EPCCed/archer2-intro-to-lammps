@@ -25,7 +25,7 @@ LAMMPS command, or when I want to understand how LAMMPS implements a specific
 functionality.
 
 In this manual, there is a handy [How-to](https://docs.lammps.org/Howto.html) 
-section. You can find a number of tutorials in there for understaning and 
+section. You can find a number of tutorials in there for understanding and 
 running various simulations.
 
 The [LAMMPS example scripts](https://docs.lammps.org/Examples.html) that come 
@@ -51,7 +51,7 @@ This is also to let you test out your own simulations on ARCHER2.
 
 If you have any questions about using ARCHER2, the first port of call is the 
 [ARCHER2 manual](https://docs.archer2.ac.uk/). This manual covers a number of 
-aspects of using ARCHER2, from the more simple ""ow to I get a program to run" 
+aspects of using ARCHER2, from the more simple "How to I get a program to run" 
 to the more complex "How can I debug my software efficiently on a 
 supercomputer".
 
@@ -60,7 +60,7 @@ support team by email at support@archer2.ac.uk.
 
 ## ARCHER2 Training
 
-There is lots of training matieral available through the ARCHER2 service 
+There is lots of training material available through the ARCHER2 service 
 covering many different topics and to suit many different levels of 
 experience. 
 

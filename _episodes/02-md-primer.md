@@ -106,7 +106,7 @@ In practical terms, any MD software follows the same basic steps:
 With the new particle positions, the cycle continues, one very small time-step at a time.
 
 [comment]: # (make image better)
-{% include figure.html url="" max-width="80%" file="/fig/2_MD-primer/MD.png" alt="How MD Works" %}
+{% include figure.html url="" max-width="60%" file="/fig/2_MD-primer/MD.png" alt="How MD Works" %}
 
 With this in mind, we can take a look at a very simple example of a LAMMPS input file, `in.lj`, and discuss each command -- and their related concepts -- one by one.
 The order that the commands appear in **can** be important, depending on the exact details.

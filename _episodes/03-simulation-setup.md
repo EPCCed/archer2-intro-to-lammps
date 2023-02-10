@@ -95,7 +95,7 @@ create_atoms  1 box
 
 The final result is a box like this:
 
-{% include figure.html url="" max-width="80%" file="/fig/2_MD-primer/lattice.png" alt="Lattice" %}
+{% include figure.html url="" max-width="60%" file="/fig/2_MD-primer/lattice.png" alt="Lattice" %}
 
 
 

@@ -1,5 +1,4 @@
-# ARCHER2 Introduction to LAMMPS (31 March 2022)
-
+# ARCHER2 Introduction to LAMMPS (14 March 2023)
 
 
 ## Course timetable

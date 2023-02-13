@@ -1,6 +1,6 @@
 ---
 title: "Additional software"
-teaching: 20
+teaching: 30
 exercises: 0
 questions:
 - "What other software can I use to prepare input files, and topology files?"

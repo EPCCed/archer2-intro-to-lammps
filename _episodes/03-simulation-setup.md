@@ -1,15 +1,35 @@
 ---
 title: "Setting up a simulation in LAMMPS"
-teaching: 50
-exercises: 30
+teaching: 40
+exercises: 20
 questions:
+- "What are molecular dynamics simulations?"
 - "How do we setup a simulation in LAMMPS?"
 objectives:
-- "Understand the commands, keywords, and parameters that are necessary to setup a LAMMPS simulation."
+- "Understand the commands, keywords, and parameters that are necessary to setup a LAMMPS MD simulation."
 keypoints:
+- "Molecular dynamics simulations are a method to analyse the physical movement of a system of many particles that are allowed to interact."
 - "A LAMMPS input file is a an ordered collection of commands with both mandatory and optional arguments."
 - "To successfully run a LAMMPS simulation, an input file needs to cover basic simulation setup, read/create a system topology, force-field, and type/frequency of outputs."
 ---
+
+## What is Molecular Dynamics
+
+Molecular Dynamics is, simply, the application of Newton's laws of motion to systems of particles that can range in size from atoms, course-grained moieties, entire molecules, or even grains of sand.
+In practical terms, any MD software follows the same basic steps:
+
+  1. Take the initial positions of the particles in the simulation box and calculate the total force that apply to each particle, using the chosen force-field.
+  2. Use the calculated forces to calculate the acceleration to add to each particle;
+  3. Use the acceleration to calculate the new velocity of each particle;
+  4. Use the the new velocity of each particle, and the defined time-step, to calculate a new position for each particle.
+
+With the new particle positions, the cycle continues, one very small time-step at a time.
+
+{% include figure.html url="" max-width="60%" file="/fig/2_MD-primer/MD.png" alt="How MD Works" %}
+
+With this in mind, we can take a look at a very simple example of a LAMMPS input file, `in.lj`, and discuss each command -- and their related concepts -- one by one.
+The order that the commands appear in **can** be important, depending on the exact details.
+Always refer to the LAMMPS manual to check.
 
 ## Simulation setup
 

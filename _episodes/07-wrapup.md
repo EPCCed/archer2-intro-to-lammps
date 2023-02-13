@@ -1,6 +1,6 @@
 ---
 title: "Next steps"
-teaching: 15
+teaching: 20
 exercises: 0
 questions:
 - "Where can I get further information about LAMMPS?"

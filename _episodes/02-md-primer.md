@@ -1,17 +1,16 @@
 ---
 title: "An introduction to LAMMPS and Molecular Dynamics"
-teaching: 50
+teaching: 30
 exercises: 20
 questions:
 - "What is LAMMPS?"
 - "How do I run jobs in ARCHER2?"
-- "What are molecular dynamics simulations?"
 objectives:
-- "Understand what LAMMPS is, how to launch jobs on ARCHER2 using the slurm batch system, and what molecular simulations are."
+- "Understand what LAMMPS is, how to launch jobs on ARCHER2 using the slurm batch system, and how benchmarking can help increase performance."
 keypoints:
 - "LAMMPS is a versatile software used in a wide range of subjects to run classical molecular dynamics simulations."
 - "Running jobs on ARCHER2 requires a submission to the Slurm batch system using specific account, budget, queue, and qos keywords."
-- "Molecular dynamics simulations are a method to analyse the physical movement of a system of many particles that are allowed to interact."
+- "Adding more cores is not always the most effective way of increasing performance."
 ---
 
 
@@ -92,24 +91,127 @@ In this directory you will find three files:
   - `data.ethanol` is a LAMMPS data file for a single ethanol molecule.
     This template will be copied by the `in.lammps` file to generate our simulation box.
 
+> ## Why ethanol?
+> 
+> The `in.ethanol` LAMMPS input that we are using for this exercise is an 
+> easily edited benchmark script used within EPCC to test system performance. 
+> The intention of this script is to be easy to edit and alter when running on 
+> very varied core/node counts. By editing the `X_LENGTH`, `Y_LENGTH`, and 
+> `Z_LENGTH` variables, you can increase the box size substantially. As to the 
+> choice of molecule, we wanted something small and with partial charges -- 
+> ethanol seemed to fit both of those.
+{: .callout}
 
-## What is Molecular Dynamics
+To submit your first job on ARCHER2, please run:
 
-Molecular Dynamics is, simply, the application of Newton's laws of motion to systems of particles that can range in size from atoms, course-grained moieties, entire molecules, or even grains of sand.
-In practical terms, any MD software follows the same basic steps:
+```bash
+sbatch sub.slurm
+```
 
-  1. Take the initial positions of the particles in the simulation box and calculate the total force that apply to each particle, using the chosen force-field.
-  2. Use the calculated forces to calculate the acceleration to add to each particle;
-  3. Use the acceleration to calculate the new velocity of each particle;
-  4. Use the the new velocity of each particle, and the defined time-step, to calculate a new position for each particle.
+You can check the progress of your job by running `squeue -u ${USER}`. Your 
+job state will go from `PD` (pending) to `R` (running) to `CG` (cancelling). 
+Once your job is complete, it will have produced a file called 
+`slurm-####.out` -- this file contains the STDOUT and STDERR produced by your 
+job.
 
-With the new particle positions, the cycle continues, one very small time-step at a time.
+The job will also produce a LAMMPS log file `log.out`. In this file, you will 
+find all of the thermodynamic outputs that were specified in the LAMMPS 
+`thermo_style`, as well as some very useful performance information! After 
+every `run` is complete, LAMMPS outputs a series of information that can be 
+used to better understand the behaviour of your job.
 
-[comment]: # (make image better)
-{% include figure.html url="" max-width="60%" file="/fig/2_MD-primer/MD.png" alt="How MD Works" %}
+```
+Loop time of 197.21 on 1 procs for 10000 steps with 1350 atoms
 
-With this in mind, we can take a look at a very simple example of a LAMMPS input file, `in.lj`, and discuss each command -- and their related concepts -- one by one.
-The order that the commands appear in **can** be important, depending on the exact details.
-Always refer to the LAMMPS manual to check.
+Performance: 4.381 ns/day, 5.478 hours/ns, 50.707 timesteps/s
+100.0% CPU use with 1 MPI tasks x 1 OpenMP threads
+
+MPI task timing breakdown:
+Section |  min time  |  avg time  |  max time  |%varavg| %total
+---------------------------------------------------------------
+Pair    | 68.063     | 68.063     | 68.063     |   0.0 | 34.51
+Bond    | 5.0557     | 5.0557     | 5.0557     |   0.0 |  2.56
+Kspace  | 5.469      | 5.469      | 5.469      |   0.0 |  2.77
+Neigh   | 115.22     | 115.22     | 115.22     |   0.0 | 58.43
+Comm    | 1.4039     | 1.4039     | 1.4039     |   0.0 |  0.71
+Output  | 0.00034833 | 0.00034833 | 0.00034833 |   0.0 |  0.00
+Modify  | 1.8581     | 1.8581     | 1.8581     |   0.0 |  0.94
+Other   |            | 0.139      |            |       |  0.07
+
+Nlocal:        1350.00 ave        1350 max        1350 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Nghost:        10250.0 ave       10250 max       10250 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Neighs:        528562.0 ave      528562 max      528562 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+
+Total # of neighbors = 528562
+Ave neighs/atom = 391.52741
+Ave special neighs/atom = 7.3333333
+Neighbor list builds = 10000
+Dangerous builds not checked
+Total wall time: 0:05:34
+```
+
+The ultimate aim is always to get your simulation to run in a sensible amount 
+of time. This often simply means trying to optimise the final value ("Total 
+wall time"), though some people care more about optimising efficiency (wall 
+time multiplied by core count). In this lesson, we will be focusing on what 
+we can do to improve these.
+
+## Increasing computational resources
+
+The first approach that most people take to increase the speed of their 
+simulations is to increase the computational resources. If your system can 
+accommodate this, doing this can sometimes lead to "easy" improvements. 
+However, this usually comes at an increased cost (if running on a system for 
+which compute is charged) and does not always lead to the desired results.
+
+In your first run, LAMMPS was run on a single core. For a large enough system, 
+increasing the number of cores used should reduce the total run time. In your 
+`sub.slurm` file, you can edit the `-n #` in the line:
+
+```bash
+srun --exact -n 1 lmp -i in.ethanol -l log.out
+```
+
+to run on more cores. An ARCHER2 node has 128 cores, so you could potential 
+run on up to 128 cores.
+
+
+> ## Quick benchmark
+>
+> As a first exercise, fill in the table below.
+> 
+>  |Number of cores| Walltime | Performance (ns/day) |
+>  |---------------|----------|----------------------|
+>  |   1  | | | |
+>  |   2  | | | |
+>  |   4  | | | |
+>  |   8  | | | |
+>  |  16  | | | |
+>  |  32  | | | |
+>  |  64  | | | |
+>  | 128  | | | |
+>
+> Do you spot anything unusual in these run times? If so, can you explain this 
+> strange result?
+> 
+> > ## Solution
+> > 
+> > The simulation takes almost the same amount of time when running on a 
+> > single core as when running on two cores. A more detailed look into the 
+> > `in.ethanol` file will reveal that this is because the simulation box is 
+> > not uniformly packed.
+> > 
+> {: .solution}
+{: .challenge}
+
+> ## Note
+> Here are only considering MPI parallelisation -- LAMMPS offers the option 
+> to run using joint MPI+OpenMP (more on that later), but for the exercises 
+> in this lesson, we will only be considering MPI.
+{: .callout}
+
 
 {% include links.md %}

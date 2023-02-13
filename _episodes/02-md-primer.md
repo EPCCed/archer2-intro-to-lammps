@@ -121,36 +121,36 @@ every `run` is complete, LAMMPS outputs a series of information that can be
 used to better understand the behaviour of your job.
 
 ```
-Loop time of 197.21 on 1 procs for 10000 steps with 1350 atoms
+Loop time of 476.073 on 1 procs for 10000 steps with 6561 atoms
 
-Performance: 4.381 ns/day, 5.478 hours/ns, 50.707 timesteps/s
+Performance: 1.815 ns/day, 13.224 hours/ns, 21.005 timesteps/s
 100.0% CPU use with 1 MPI tasks x 1 OpenMP threads
 
 MPI task timing breakdown:
 Section |  min time  |  avg time  |  max time  |%varavg| %total
 ---------------------------------------------------------------
-Pair    | 68.063     | 68.063     | 68.063     |   0.0 | 34.51
-Bond    | 5.0557     | 5.0557     | 5.0557     |   0.0 |  2.56
-Kspace  | 5.469      | 5.469      | 5.469      |   0.0 |  2.77
-Neigh   | 115.22     | 115.22     | 115.22     |   0.0 | 58.43
-Comm    | 1.4039     | 1.4039     | 1.4039     |   0.0 |  0.71
-Output  | 0.00034833 | 0.00034833 | 0.00034833 |   0.0 |  0.00
-Modify  | 1.8581     | 1.8581     | 1.8581     |   0.0 |  0.94
-Other   |            | 0.139      |            |       |  0.07
+Pair    | 152.27     | 152.27     | 152.27     |   0.0 | 31.98
+Bond    | 21.617     | 21.617     | 21.617     |   0.0 |  4.54
+Kspace  | 24.884     | 24.884     | 24.884     |   0.0 |  5.23
+Neigh   | 273.91     | 273.91     | 273.91     |   0.0 | 57.53
+Comm    | 2.0977     | 2.0977     | 2.0977     |   0.0 |  0.44
+Output  | 0.000598   | 0.000598   | 0.000598   |   0.0 |  0.00
+Modify  | 0.90765    | 0.90765    | 0.90765    |   0.0 |  0.19
+Other   |            | 0.39       |            |       |  0.08
 
-Nlocal:        1350.00 ave        1350 max        1350 min
+Nlocal:           6561 ave        6561 max        6561 min
 Histogram: 1 0 0 0 0 0 0 0 0 0
-Nghost:        10250.0 ave       10250 max       10250 min
+Nghost:           8066 ave        8066 max        8066 min
 Histogram: 1 0 0 0 0 0 0 0 0 0
-Neighs:        528562.0 ave      528562 max      528562 min
+Neighs:    1.29863e+06 ave 1.29863e+06 max 1.29863e+06 min
 Histogram: 1 0 0 0 0 0 0 0 0 0
 
-Total # of neighbors = 528562
-Ave neighs/atom = 391.52741
+Total # of neighbors = 1298629
+Ave neighs/atom = 197.93157
 Ave special neighs/atom = 7.3333333
 Neighbor list builds = 10000
 Dangerous builds not checked
-Total wall time: 0:05:34
+Total wall time: 0:08:45
 ```
 
 The ultimate aim is always to get your simulation to run in a sensible amount 

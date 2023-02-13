@@ -1,6 +1,6 @@
 ---
 title: "Setting up a simulation in LAMMPS"
-teaching: 20
+teaching: 50
 exercises: 30
 questions:
 - "How do we setup a simulation in LAMMPS?"

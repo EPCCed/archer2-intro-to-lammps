@@ -1,7 +1,7 @@
 ---
 title: "An introduction to LAMMPS and Molecular Dynamics"
-teaching: 20
-exercises: 0
+teaching: 50
+exercises: 20
 questions:
 - "What is LAMMPS?"
 - "How do I run jobs in ARCHER2?"

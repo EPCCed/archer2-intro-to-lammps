@@ -10,9 +10,9 @@ humandate:
 humantime: 
 startdate: 
 enddate: 
-instructor: ["Julien Sindt and Stephen Farr"]
-helper: ["Andy Turner"]
-email: ["J.Sindt@epcc.ed.ac.uk"]
+instructor: ["Julien Sindt and Rui Apóstolo"]
+helper: [""]
+email: ["J.Sindt@epcc.ed.ac.uk, R.Apostolo@epcc.ed.ac.uk"]
 collaborative_notes: 
 eventbrite: 
 root: .
@@ -20,19 +20,19 @@ root: .
 
 <h2>Description</h2>
 
-This lesson provides an overview of some more advanced techniques and uses of 
-LAMMPS. Specifically, we will be discussing:
-  - Measuring and improving LAMMPS performance
-  - Using LAMMPS with Python
-  - Analysing systems through reruns
-  - Advanced sampling methods with a focus on replica exchange
+This lesson is an introduction to molecular dynamics (MD) simulations using the LAMMPS package. It will cover the following topics:
+  - Molecular dynamics simulation fundamentals.
+  - Creating a LAMMPS input file.
+  - Using force-fields and creating independant LAMMPS topology (data) files.
+  - Computing and averaging physical properties during simulation.
+  - Other software related to LAMMPS input creation, data post-processing, and visualization.
 
-For this lesson, we expect attendees to be familiar with LAMMPS. We will *not* 
-be covering how to prepare and run a parallel LAMMPS simulation (and we will 
-assume that all attendees know how to do that already). This lesson is aimed 
-at anyone who:
-  - has experience using `bash` (or any other shell)
-  - has experience running LAMMPS on multiple processors
+For this lesson, we expect attendees to be familiar with HPC environments.
+We will *not* be covering the differences between HPC and regular computing environments.
+This lesson is aimed at anyone who:
+  - has experience using `bash` (or any other shell).
+  - has an interest in running simulations using LAMMPS.
+
 
 <hr/>
 
@@ -81,8 +81,7 @@ at anyone who:
   tablet, Chromebook, etc.) that they have administrative privileges on. They 
   should have access to a terminal (Max and Linux users should have a terminal 
   installed by default; Windows users should get either 
-  <a href="https://mobaxterm.mobatek.net/">MobaXterm</a> or 
-  <a href="https://www.putty.org/">PuTTY</a>. They are also required to abide 
+  <a href="https://mobaxterm.mobatek.net/">MobaXterm</a> or, if they are already familiar with it, Windows Subsystems for Linux (WSL). They are also required to abide 
   by the <a href="https://www.archer2.ac.uk/training/code-of-conduct/">ARCHER2 Training Code of Conduct</a>.
 </p>
 

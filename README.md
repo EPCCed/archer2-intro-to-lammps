@@ -1,14 +1,11 @@
-
-
-# ARCHER2 Advanced use of LAMMPS (31 March 2022)
-
+# ARCHER2 Introduction to LAMMPS (14 March 2023)
 
 
 ## Course timetable
 
-This is a one-day advanced use of LAMMPS course.
+This is a one-day introduction to LAMMPS course.
 
-The rendered course is available at https://epcced.github.io/20220421_GROMACS_introduction/
+The rendered course is available at https://epcced.github.io/archer2-intro-to-lammps/
 
 
 

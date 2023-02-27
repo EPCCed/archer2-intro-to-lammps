@@ -1,0 +1,88 @@
+####################################
+# Example LAMMPS input script      #
+# for a simple Lennard Jones fluid #
+####################################
+
+####################################
+# 0) Define vairables
+####################################
+
+variable  DENSITY equal 0.8
+
+####################################
+# 1) Set up simulation box
+#   - We set a 3D periodic box
+#   - Our box has 10x10x10 atom 
+#     positions, evenly distributed
+#   - The atom starting sites are
+#     separated such that the box density
+#     is 0.6
+####################################
+
+units         lj
+atom_style    atomic
+dimension     3
+boundary      p p p
+
+lattice       sc ${DENSITY}
+region        box block 0 10 0 10 0 10
+create_box    1 box
+create_atoms  1 box
+
+####################################
+# 2) Define interparticle interactions
+#   - Here, we use truncated & shifted LJ
+#   - All atoms of type 1 (in this case, all atoms)
+#     have a mass of 1.0
+####################################
+
+pair_style  lj/cut 3.5
+pair_modify shift yes
+pair_coeff  1 1 1.0 1.0
+mass        1 1.0
+
+####################################
+# 3) Neighbour lists
+#   - Each atom will only consider neighbours
+#     within a distance of 2.8 of each other
+#   - The neighbour lists are recalculated
+#     every timestep
+####################################
+
+neighbor        0.3 bin
+neigh_modify    delay 10 every 1
+
+####################################
+# 4) Define simulation parameters
+#   - We fix the temperature and 
+#     linear and angular momenta
+#     of the system 
+#   - We run with fixed number (n),
+#     volume (v), temperature (t)
+####################################
+
+fix   LinMom all momentum 50 linear 1 1 1 angular
+fix   1 all nvt temp 1.00 1.00 5.0
+#fix    1 all npt temp 1.0 1.0 25.0 iso 1.5150 1.5150  10.0
+
+####################################
+# 5) Final setup
+#   - Define starting particle velocity
+#   - Define timestep
+#   - Define output system properties (temp, energy, etc.)
+#   - Define simulation length
+####################################
+
+velocity      all create 1.0 199085 mom no
+
+timestep      0.005
+
+thermo_style  custom step temp etotal pe ke press vol density
+thermo        500
+
+compute       RDF all rdf 150 cutoff 3.5
+fix           RDF_OUTPUT all ave/time 50 950 50000 c_RDF[*] file rdf_lj_${DENSITY}.out mode vector
+
+run_style     verlet
+
+run           50000

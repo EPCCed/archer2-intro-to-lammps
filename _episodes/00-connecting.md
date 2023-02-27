@@ -41,7 +41,7 @@ password must have the required complexity as specified in the
 
 The password policy has been chosen to allow users to use both complex, shorter passwords and
 long, but comparatively simple passwords. For example, passwords in the style of both
-`LA10!£lsty` and `horsebatterystaple` would be supported.
+`LA10!£lsty` and `correcthorsebatterystaple` would be supported.
 
 ## SSH keys
 

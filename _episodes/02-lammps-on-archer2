@@ -1,5 +1,5 @@
 ---
-title: "An introduction to LAMMPS and Molecular Dynamics"
+title: "An introduction to LAMMPS on ARCHER2"
 teaching: 30
 exercises: 20
 questions:
@@ -28,13 +28,23 @@ Everything we are covering today (and a lot of other info) can be found in the [
 ARCHER2 uses a module system. In general, you can run LAMMPS on ARCHER2 by using the LAMMPS module:
 
 ```bash
----------------------------------------------------------------------------------------------------------------------------
+user@ln01:~> module spider lammps
+--------------------------------------------------------------------------------------------
+  lammps:
+--------------------------------------------------------------------------------------------
      Versions:
         lammps/13_Jun_2022
         lammps/23_Jun_2022
         lammps/29_Sep_2021
+     Other possible modules matches:
+        cpl-lammps  cpl-openfoam-lammps
 
----------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------
+  To find other possible module matches execute:
+
+      $ module -r spider '.*lammps.*'
+
+--------------------------------------------------------------------------------------------
   For detailed information about a specific "lammps" package (including how to load the modules) use the module's full name.
   Note that names that have a trailing (E) are extensions provided by other modules.
   For example:
@@ -48,16 +58,8 @@ For this course, we will be using certain LAMMPS packages that are not included 
 We have built a version of LAMMPS that can be accessed by ensuring that the following commands are run prior to executing your LAMMPS command.
 
 ```bash
-module load PrgEnv-gnu
-module load cray-python
-
-export LAMMPS_DIR=/work/ta058/shared/lammps_build/
-export PATH=${PATH}:${LAMMPS_DIR}/bin
-export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${LAMMPS_DIR}/lib64
-export PYTHONPATH=${PYTHONPATH}:${LAMMPS_DIR}/lib/python3.8/site-packages
+module load lammps/23_Jun_2022
 ```
-
-The build instructions for this version are described in the next section of the course.
 
 Once your environment is set up, you will have access to the `lmp` LAMMPS executable.
 Note that you will only be able to run this on a single core on the ARCHER2 login node.
@@ -77,7 +79,7 @@ You can get a copy of these exercises by running (make sure to run this from `/w
 
 [comment]: # (change to intro link)
 ```bash
-svn checkout https://github.com/EPCCed/archer2-advanced-use-of-lammps/trunk/exercises
+svn checkout https://github.com/EPCCed/archer2-intro-to-lammps/
 ```
 
 [comment]: # (change exercise names and file names)
@@ -171,6 +173,7 @@ In your first run, LAMMPS was run on a single core. For a large enough system,
 increasing the number of cores used should reduce the total run time. In your 
 `sub.slurm` file, you can edit the `-n #` in the line:
 
+[comment]: # (does this command still need the --exact flag?)
 ```bash
 srun --exact -n 1 lmp -i in.ethanol -l log.out
 ```

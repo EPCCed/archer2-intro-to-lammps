@@ -40,32 +40,33 @@ In this example, because we're running an NVT simulation, both the simulation bo
 At the end of each `run` command, we get the analysis of how the simulation time is spent:
 
 ```
-Loop time of 16.0334 on 64 procs for 50000 steps with 1000 atoms
+Loop time of 9.55046 on 64 procs for 50000 steps with 1000 atoms
 
-Performance: 1347185.752 tau/day, 3118.486 timesteps/s
-96.6% CPU use with 8 MPI tasks x 8 OpenMP threads
+Performance: 2261671.288 tau/day, 5235.350 timesteps/s
+99.1% CPU use with 64 MPI tasks x 1 OpenMP threads
 
 MPI task timing breakdown:
 Section |  min time  |  avg time  |  max time  |%varavg| %total
 ---------------------------------------------------------------
-Pair    | 5.6085     | 5.9415     | 6.2714     |   7.9 | 37.06
-Neigh   | 1.3986     | 1.4617     | 1.5038     |   2.9 |  9.12
-Comm    | 6.5302     | 6.7545     | 7.0383     |   6.1 | 42.13
-Output  | 0.016128   | 0.0197     | 0.032095   |   3.5 |  0.12
-Modify  | 1.278      | 1.6491     | 1.8464     |  16.7 | 10.29
-Other   |            | 0.2068     |            |       |  1.29
+Pair    | 0.59231    | 0.65362    | 0.71353    |   3.8 |  6.84
+Neigh   | 0.27723    | 0.28862    | 0.30129    |   1.2 |  3.02
+Comm    | 7.6539     | 7.8774     | 8.1735     |   5.8 | 82.48
+Output  | 0.0033658  | 0.0042377  | 0.0044533  |   0.3 |  0.04
+Modify  | 0.44529    | 0.68461    | 0.89407    |  16.2 |  7.17
+Other   |            | 0.04201    |            |       |  0.44
 
-Nlocal:        125.000 ave         133 max         114 min
-Histogram: 1 0 0 2 1 1 0 0 0 3
-Nghost:        1354.12 ave        1389 max        1322 min
-Histogram: 1 0 1 2 1 0 0 2 0 1
-Neighs:        8567.38 ave        9781 max        7536 min
-Histogram: 1 1 2 0 1 0 0 2 0 1
+Nlocal:         15.625 ave          20 max          13 min
+Histogram: 6 11 12 0 21 6 0 4 2 2
+Nghost:        859.953 ave         872 max         851 min
+Histogram: 2 7 11 13 8 14 3 2 2 2
+Neighs:        1424.08 ave        1824 max        1135 min
+Histogram: 5 7 11 11 8 10 3 2 3 4
 
-Total # of neighbors = 68539
-Ave neighs/atom = 68.539000
+Total # of neighbors = 91141
+Ave neighs/atom = 91.141
 Neighbor list builds = 4999
-Dangerous builds = 4995
+Dangerous builds = 4996
+Total wall time: 0:00:09
 ```
 
 The data here presented is very important, and can help you substantially improve the speed at which your simulations run.
@@ -75,8 +76,8 @@ This can be useful to compare between different systems.
 Then we get some benchmark information:
 
 ```
-Performance: 1347185.752 tau/day, 3118.486 timesteps/s
-96.6% CPU use with 8 MPI tasks x 8 OpenMP threads
+Performance: 2261671.288 tau/day, 5235.350 timesteps/s
+99.1% CPU use with 64 MPI tasks x 1 OpenMP threads
 ```
 
 How many time units per day / how many time-steps per second.
@@ -88,12 +89,12 @@ The next table shows a breakdown of the time spent on each task by the MPI libra
 MPI task timing breakdown:
 Section |  min time  |  avg time  |  max time  |%varavg| %total
 ---------------------------------------------------------------
-Pair    | 5.6085     | 5.9415     | 6.2714     |   7.9 | 37.06
-Neigh   | 1.3986     | 1.4617     | 1.5038     |   2.9 |  9.12
-Comm    | 6.5302     | 6.7545     | 7.0383     |   6.1 | 42.13
-Output  | 0.016128   | 0.0197     | 0.032095   |   3.5 |  0.12
-Modify  | 1.278      | 1.6491     | 1.8464     |  16.7 | 10.29
-Other   |            | 0.2068     |            |       |  1.29
+Pair    | 0.59231    | 0.65362    | 0.71353    |   3.8 |  6.84
+Neigh   | 0.27723    | 0.28862    | 0.30129    |   1.2 |  3.02
+Comm    | 7.6539     | 7.8774     | 8.1735     |   5.8 | 82.48
+Output  | 0.0033658  | 0.0042377  | 0.0044533  |   0.3 |  0.04
+Modify  | 0.44529    | 0.68461    | 0.89407    |  16.2 |  7.17
+Other   |            | 0.04201    |            |       |  0.44
 ```
 
 The `Pair` line refers to non-bonded force computations, `Bond` includes all bonded interactions, including angles, dihedrals, and impropers, `Kspace` relates to long-range interactions (Ewald, PPPM or MSM), `Neigh` is the construction of neighbour lists, Comm is inter-processor communication (AKA, parallelisation overhead), `Output` is the writing of files (log and dump files), `Modify` is the fixes and computes invoked by fixes, and `Other` is everything else.
@@ -110,7 +111,7 @@ The final column, %total, is the percentage of the loop time spent in the catego
 The last line on every LAMMPS simulation will be the total wall time for the entire input script, no matter how many `run` commands it has:
 
 ```
-Total wall time: 0:00:16
+Total wall time: 0:00:09
 ```
 
 {% include links.md %}

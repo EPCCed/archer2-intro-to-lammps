@@ -6,7 +6,7 @@ questions:
 - "What are molecular dynamics simulations?"
 - "How do we setup a simulation in LAMMPS?"
 objectives:
-- "Understand the commands, keywords, and parameters that are necessary to setup a LAMMPS MD simulation."
+- "Understand the commands, keywords, and parameters necessary to setup a LAMMPS MD simulation."
 keypoints:
 - "Molecular dynamics simulations are a method to analyse the physical movement of a system of many particles that are allowed to interact."
 - "A LAMMPS input file is a an ordered collection of commands with both mandatory and optional arguments."
@@ -52,9 +52,9 @@ The next line defines what style of `atoms` (LAMMPS's terminology is for particl
 atom_style    atomic
 ```
 
-This impacts on what attributes each atom has associated with it -- this cannot be changed during a simulation
+This impacts on what attributes each atom has associated with it -- this cannot be changed during a simulation.
 Every style stores: coordinates, velocities, atom IDs, and atom types.
-The `atomic` style doesn't add any further attributes.
+The `atomic` style doesn't add any further attributes, but other styles will store additional information.
 
 We then choose 3 dimensions.
 
@@ -151,7 +151,7 @@ This subtracts the value of the potential at the cutoff point (which should be v
 pair_modify shift yes
 ```
 
-Next we set the LJ parameters for the interactions between atom types `1` and `1` (the only we have, there can be more), ε, the maximum depth of the energy well, and σ, the zero-crossing distance for the potential.
+Next we set the LJ parameters for the interactions between atom types `1` and `1` (the only we have, but there can be more), ε, the maximum depth of the energy well, and σ, the zero-crossing distance for the potential.
 Note that these are both relative to the non-shifted potential.
 
 ```
@@ -186,7 +186,7 @@ neighbor        0.3 bin
 However, these lists need to be updated periodically, essentially more often than it takes for a particle to move neighbour_cutoff - LJ_cutoff.
 This is what the next command does.
 The `delay` parameter sets the minimum number of time-steps that need to pass since the last neighbour list rebuild for LAMMPS to even consider rebuilding it again.
-The `every` parameter tells LAMMPS to attempt to build the neighbour list if `number_time_step mod every = 0` -- by default, the rebuild will only be triggered if an atom has moved more than half the neighbour skin distance (the 0.3 above)
+The `every` parameter tells LAMMPS to attempt to build the neighbour list if `number_time_step_since_delay_ended mod every = 0` -- by default, the rebuild will only be triggered if an atom has moved more than half the neighbour skin distance (the 0.3 above)
 
 ```
 neigh_modify    delay 10 every 1
@@ -196,9 +196,9 @@ neigh_modify    delay 10 every 1
 
 
 Now that we set up the initial conditions for the simulation, and changed some settings to make sure it runs a bit faster, all that is left is telling LAMMPS exactly how we want the simulation to be.
-This includes, but is not limited to, what ensemble to use (and which particles to apply it to), how bit is the time-step, how many time-steps we want to simulate, what properties we want as output, and how often.
+This includes, but is not limited to, what ensemble to use (and which particles to apply it to), how big the time-step is, how many time-steps we want to simulate, what properties we want as output, and how often we want those properties logged.
 
-The `fix` command has myriad options, most of them related to 'setting' certain properties at a value, or in an interval of values for one, all, or some particles in the simulation.
+The `fix` command has a myriad of options, most of them related to 'setting' certain properties at a value, or in an interval of values for one, all, or some particles in the simulation.
 
 The first keywords are always `ID` -- a name to reference the fix by, and `group-ID` -- which particles to apply the command to.
 The most common option for the second keyword is `all`.
@@ -209,7 +209,13 @@ fix     1 all nvt temp 1.00 1.00 5.0
 
 Then we have the styles plus the arguments.
 In the case above, the style is `nvt`, and the arguments are the temperatures at the start and end of the simulation run (`Tstart` and `Tstop`), and the temperature damping parameter (`Tdamp`), in time units.
-[comment]: # (A Nose-Hoover thermostat will not work well for arbitrary values of `Tdamp`. If `Tdamp` is too small, the temperature can fluctuate wildly; if it is too large, the temperature will take a very long time to equilibrate. A good choice for many models is a `Tdamp` of around 100 time-steps. Note that this is NOT the same as 100 time units for most units settings.)
+
+> ## Note
+> A Nose-Hoover thermostat will not work well for arbitrary values of `Tdamp`
+> If `Tdamp` is too small, the temperature can fluctuate wildly; if it is too large, the temperature will take a very long time to equilibrate
+> A good choice for many models is a `Tdamp` of around 100 time-steps
+> Note that this is NOT the same as 100 time units for most units settings.
+{: .callout}
 
 Another example of what a `fix` can do, is set a property (in this case, momentum), to a certain value:
 
@@ -242,7 +248,7 @@ timestep      0.005
 
 The size of the time-step is a careful juggling of speed vs. accuracy.
 A small time-step guarantees that no particle interactions are missing, at the cost of a lot of computation time.
-A large time-step allows for simulations that probe effects at long time scales, but risks a particle moving so much in each time-step, that some interactions are missed -- in extreme cases, some particles can 'fly' right through each other.
+A large time-step allows for simulations that probe effects at longer time scales, but risks a particle moving so much in each time-step, that some interactions are missed -- in extreme cases, some particles can 'fly' right through each other.
 The 'happy medium' depends on the system type, size, and temperature, and can be estimated from the average diffusion of the particles.
 
 The next line sets what thermodynamic information we want LAMMPS to output to the terminal and the log file.
@@ -269,5 +275,20 @@ And finally, we choose how many time-steps (**not time-units**) to run the simul
 ```
 run           50000
 ```
+
+> ## Run LJ simulation
+>
+> What command does it take to submit the LJ simulation to the ARCHER2 queue?
+> What was the output?
+> 
+> > ## Solution
+> > 
+> > ```sbatch sub.slurm```
+> > 
+> > We will inspect the logfile in detail on the next session.
+> > 
+> {: .solution}
+{: .challenge}
+
 
 {% include links.md %}

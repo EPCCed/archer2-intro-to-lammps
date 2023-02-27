@@ -73,4 +73,3 @@ ARCHER2 courses in the
 [ARCHER2 course repository](https://www.archer2.ac.uk/training/materials/)
 
 {% include links.md %}
-

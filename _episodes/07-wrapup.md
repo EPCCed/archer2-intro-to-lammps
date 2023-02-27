@@ -42,7 +42,7 @@ records to check that someone has not already asked it.
 
 ## ARCHER2 resources
 
-If you attended the live course, you will retain access to your `ta058` 
+If you attended the live course, you will retain access to your `ta100` 
 account (with a small amount of budget) for a couple of months following the 
 course. This is to allow you to make sure that you understood all of the 
 course materials and have an opportunity to run any of the exercise 

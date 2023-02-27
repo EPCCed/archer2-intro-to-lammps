@@ -72,7 +72,7 @@ The compute nodes do not have access to the landing `home` file system -- this f
 
 {% include figure.html url="" max-width="60%" file="/fig/2_MD-primer/archer2_architecture.png" alt="ARCHER2 architecture" %}
 
-On ARCHER2, when submitting jobs to the compute nodes, make sure that you are in your `/work/ta058/ta058/<username>` directory, as the `/home` file system is not accessible to the compute nodes.
+On ARCHER2, when submitting jobs to the compute nodes, make sure that you are in your `/work/ta100/ta100/<username>` directory, as the `/home` file system is not accessible to the compute nodes.
 
 For this course, we have prepared a number of exercises.
 You can get a copy of these exercises by running (make sure to run this from `/work`):

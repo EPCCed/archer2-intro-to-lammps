@@ -4,7 +4,7 @@
 #SBATCH --nodes=1
 #SBATCH --time=0:20:0
 
-#SBATCH --account=ta058
+#SBATCH --account=ta100
 #SBATCH --partition=standard
 #SBATCH --qos=short
 

@@ -163,14 +163,11 @@ LAMMPS has a large number of
 available. In this case, we are using Lennard-Jones interactions, cut at 3.5 Å.
 Cutting the interactions at a certain distance (as opposed to calculating
 interactions up to an 'infinite' distance, drastically reduces the computation
-time. This approximation is only valid because the LJ potential is asymptotic
-to zero at high *d* distance between particles.
+time required to calculate the energy on each particle. This approximation
+works because the LJ potential is asymptotic to zero at high interparticle
+distances *d*.
 
 {% include figure.html url="" max-width="60%" file="/fig/2_MD-primer/lj_potential_new.png" alt="Lattice" %}
-
-and another test
-
-{% include figure.html url="" max-width="60%" file="/fig/2_MD-primer/lj_potential_new.jpg" alt="Lattice" %}
 
 To make sure there is no discontinuity at the cutoff point, we can shift the
 potential. This subtracts the value of the potential at the cutoff point
@@ -181,10 +178,12 @@ cutoff equal to zero.
 pair_modify shift yes
 ```
 
-Next we set the LJ parameters for the interactions between atom types `1` and
-`1` (the only we have, but there can be more), ε, the maximum depth of the
-energy well, and σ, the zero-crossing distance for the potential. Note that
-these are both relative to the non-shifted potential.
+Next we set the LJ parameters for the interactions between atom. In this
+example, we only have one type of atoms, and so only need to worry about
+interactions between atoms of type 1 with other atoms of type 1 (usually,
+there are more types -- *e.g.* look at the `in.ethanol` file). We define the
+minimum energy between two particles (ε) and the particle diameter (σ). Note
+that these are both relative to the non-shifted potential.
 
 ```
 pair_coeff  1 1 1.0 1.0
@@ -197,112 +196,171 @@ mass        1 1.0
 ```
 
 There are many other characteristics that may be needed for a given simulation.
-For example, LAMMPS has functions to simulate bonds, angles, dihedrals, impropers, and more.
-
-
+For example, LAMMPS has functions to simulate bonds, angles, dihedrals,
+improper angles, and more.
 
 ### Neighbour lists
 
-To improve simulation performance, and because we are truncating interactions at a certain distance, we can keep a list of particles that are close to each other (under a neighbour cutoff distance).
-This reduces the number of comparisons needed per time-step, at the cost of a small amount of memory.
+To improve simulation performance, and because we are truncating interactions
+at a certain distance, we can keep a list of particles that are close to each
+other (under a neighbour cutoff distance). This reduces the number of
+comparisons needed per time-step, at the cost of a small amount of memory.
 
 {% include figure.html url="" max-width="30%" file="/fig/2_MD-primer/cutoff.png" alt="Neighbour lists" %}
 
-So we can add a 0.3σ distance to our neighbour cutoff, above the LJ cutoff, so a total of 3.8σ.
-The `bin` keyword refers to the algorithm used to build the list, `bin` is the best performing one for systems with homogeneous sizes of particles.
+We can set our neighbour list cutoff to be 0.3σ greater than our LJ cutoff (so
+a total of 3.8σ) -- remember that, as we are dealing with spheres, a small
+increase in radius results can result in a large volume increase.
+
+The `bin` keyword refers to the algorithm used to build the list, `bin` is the
+best performing one for systems with homogeneous sizes of particles, but there
+are [others](https://docs.lammps.org/neighbor.html).
 
 ```
 neighbor        0.3 bin
 ```
 
-However, these lists need to be updated periodically, essentially more often than it takes for a particle to move neighbour_cutoff - LJ_cutoff.
-This is what the next command does.
-The `delay` parameter sets the minimum number of time-steps that need to pass since the last neighbour list rebuild for LAMMPS to even consider rebuilding it again.
-The `every` parameter tells LAMMPS to attempt to build the neighbour list if `number_time_step_since_delay_ended mod every = 0` -- by default, the rebuild will only be triggered if an atom has moved more than half the neighbour skin distance (the 0.3 above)
+These lists still need to be updated periodically. Provided that we rebuild
+them more frequently than the minimum time it takes for a particle to move
+from within the neighbour cutoff to outside of it. We use the `neigh_modify`
+command to set the wait time between each neighbour list rebuild:
 
 ```
 neigh_modify    delay 10 every 1
 ```
 
+The `delay` parameter sets the minimum number of time-steps that
+need to pass since the last neighbour list rebuild for LAMMPS to even consider
+rebuilding it again. The `every` parameter tells LAMMPS to attempt to build
+the neighbour list if the number of timesteps since the delay ended is equal
+to the `every` value -- by default, the rebuild will only be triggered if an
+atom has moved more than half the neighbour skin distance (the 0.3 above).
+
+> ## How to set neighbour list delays?
+>
+> You can estimate the frequency at which you need to rebuild neighbour lists
+> by running a quick simulation with neighbour list rebuilds every timestep:
+>
+> ```bash
+> neigh_modify    delay 0 every 1 check yes
+> ```
+>
+> and looking at the resultant LAMMPS neighbour list information in the log
+> file generated by that run.
+>
+> The Neighbor list builds tells you how often neighbour lists needed to be
+> rebuilt. If you know how many timesteps your short simulation ran for, you
+> can estimate the frequency at which you need to calculate neighbour lists by
+> working out how many steps there are per rebuild on average. Provided that
+> your update frequency is less than or equal to that, you should see a speed
+> up.
+{: .callout}
+
 ### Simulation parameters
 
+Now that we've set up the initial conditions for the simulation, and changed
+some settings to make sure it runs a bit faster, all that is left is telling
+LAMMPS exactly how we want the simulation to be run. This includes, but is not
+limited to, what ensemble to use (and which particles to apply it to), how big
+the time-step is, how many time-steps we want to simulate, what properties we
+want as output, and how often we want those properties logged.
 
-Now that we set up the initial conditions for the simulation, and changed some settings to make sure it runs a bit faster, all that is left is telling LAMMPS exactly how we want the simulation to be.
-This includes, but is not limited to, what ensemble to use (and which particles to apply it to), how big the time-step is, how many time-steps we want to simulate, what properties we want as output, and how often we want those properties logged.
+The `fix` command has a [myriad of options](https://docs.lammps.org/fix.html),
+most of them related to 'setting' certain properties at a value, or in an
+interval of values for one, all, or some particles in the simulation.
 
-The `fix` command has a myriad of options, most of them related to 'setting' certain properties at a value, or in an interval of values for one, all, or some particles in the simulation.
-
-The first keywords are always `ID` -- a name to reference the fix by, and `group-ID` -- which particles to apply the command to.
-The most common option for the second keyword is `all`.
+The first keywords are always `ID` -- a name to reference the fix by, and
+`group-ID` -- which particles to apply the command to. The most common option
+for the second keyword is `all`.
 
 ```
 fix     1 all nvt temp 1.00 1.00 5.0
 ```
 
-Then we have the styles plus the arguments.
-In the case above, the style is `nvt`, and the arguments are the temperatures at the start and end of the simulation run (`Tstart` and `Tstop`), and the temperature damping parameter (`Tdamp`), in time units.
+Then we have the styles plus the arguments. In the case above, the style is
+`nvt`, and the arguments are the temperatures at the start and end of the
+simulation run (`Tstart` and `Tstop`), and the temperature damping parameter
+(`Tdamp`), in time units.
 
-> ## Note
+> ## Setting the Nose-Hoover damping parameter
+>
 > A Nose-Hoover thermostat will not work well for arbitrary values of `Tdamp`
-> If `Tdamp` is too small, the temperature can fluctuate wildly; if it is too large, the temperature will take a very long time to equilibrate
-> A good choice for many models is a `Tdamp` of around 100 time-steps
-> Note that this is NOT the same as 100 time units for most units settings.
+> If `Tdamp` is too small, the temperature can fluctuate wildly; if it is too
+> large, the temperature will take a very long time to equilibrate. A good
+> choice for many models is a `Tdamp` of around 100 time-steps. Note that this
+> is NOT the same as 100 time units for most units settings.
 {: .callout}
 
-Another example of what a `fix` can do, is set a property (in this case, momentum), to a certain value:
+Another example of what a `fix` can do, is set a property (in this case,
+momentum), to a certain value:
 
 ```
 fix     LinMom all momentum 50 linear 1 1 1 angular
 ```
 
-This zeroes the linear momenta of all particles in all directions, as well as the angular momentum.
+This zeroes the linear momenta of all particles in all directions, as well as
+ensuring that the angular momentum remains constant at zero throughout the run.
 
 ### Final setup
 
 
-Although we created a number of particles in a box, if we were to run a simulation, not much would happen, because these particles do not have any starting velocities.
-To change this, we use the `velocity` command, which generates an ensemble of velocities for the particles in the chosen group (in this case, `all`):
+Although we created a number of particles in a box, if we were to run a
+simulation, not much would happen, because these particles do not have any
+starting velocities. To change this, we use the `velocity` command, which
+generates an ensemble of velocities for the particles in the chosen group
+(in this case, `all`):
 
-[comment]: # (JS says Gaussian in video, but default is uniform)
 ```
 velocity      all create 1.0 199085 mom no
 ```
 
 The arguments after the `create` style are the _temperature_ and _seed number_.
-The `mom no` keyword/value pair prevents LAMMPS from zero-ing the linear momenta from the system.
-[comment]: # (this seems to be opposite what we want, according to video)
+The `mom no` keyword/value pair prevents LAMMPS from zero-ing the linear momenta
+from the system.
 
-Then we set the size of the time-step, in whatever units we have chosen for this simulation -- in this case, LJ units.
+Then we set the size of the time-step, in whatever units we have chosen for this
+simulation -- in this case, LJ units.
 
 ```
 timestep      0.005
 ```
 
-The size of the time-step is a careful juggling of speed vs. accuracy.
-A small time-step guarantees that no particle interactions are missing, at the cost of a lot of computation time.
-A large time-step allows for simulations that probe effects at longer time scales, but risks a particle moving so much in each time-step, that some interactions are missed -- in extreme cases, some particles can 'fly' right through each other.
-The 'happy medium' depends on the system type, size, and temperature, and can be estimated from the average diffusion of the particles.
+The size of the time-step is a careful juggling of speed and accuracy. A small
+time-step guarantees that no particle interactions are missing, at the cost of
+a lot of computation time. A large time-step allows for simulations that probe
+effects at longer time scales, but risks a particle moving so much in each
+time-step, that some interactions are missed -- in extreme cases, some
+particles can 'fly' right through each other. The 'happy medium' depends on
+the system type, size, and temperature, and can be estimated from the average
+diffusion of the particles.
 
-The next line sets what thermodynamic information we want LAMMPS to output to the terminal and the log file.
+The next line sets what thermodynamic information we want LAMMPS to output to
+the terminal and the log file.
 
 ```
 thermo_style  custom step temp etotal pe ke press vol density
 ```
 
-There are several default styles, and the `custom` style allows for full customisation of which fields and in which order to write them.
-To choose how often to write these fields, the command is:
+There are several default styles, and the `custom` style allows for full
+customisation of which fields and in which order to write them. To set the
+frequency (in time-steps) at which these results are output, you can vary
+the `thermo` command:
 
 ```
 thermo        500
 ```
 
-To force LAMMPS to use the Verlet algorithm (rather than the default velocity-Verlet), we use:
+In this case, an output will be printed every 500 time-steps.
+
+To force LAMMPS to use the Verlet algorithm (rather than the default
+velocity-Verlet), we use:
 
 ```
 run_style     verlet
 ```
 
-And finally, we choose how many time-steps (**not time-units**) to run the simulation for:
+And finally, we choose how many time-steps (**not time-units**) to run the
+simulation for:
 
 ```
 run           50000

@@ -27,13 +27,15 @@ Everything we are covering today (and a lot of other info) can be found in the [
 
 ## Running LAMMPS on ARCHER2
 
-ARCHER2 uses a module system. In general, you can run LAMMPS on ARCHER2 by using the LAMMPS module:
+ARCHER2 uses a module system. In general, you can run LAMMPS on ARCHER2 by
+using the LAMMPS module. You can use the `module spider` command to list all
+available versions of a module, and their dependencies:
 
 ```bash
 user@ln01:~> module spider lammps
---------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
   lammps:
---------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
      Versions:
         lammps/13_Jun_2022
         lammps/23_Jun_2022
@@ -41,51 +43,113 @@ user@ln01:~> module spider lammps
      Other possible modules matches:
         cpl-lammps  cpl-openfoam-lammps
 
---------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
   To find other possible module matches execute:
 
       $ module -r spider '.*lammps.*'
 
---------------------------------------------------------------------------------------------
-  For detailed information about a specific "lammps" package (including how to load the modules) use the module's full name.
-  Note that names that have a trailing (E) are extensions provided by other modules.
+-------------------------------------------------------------------------------
+  For detailed information about a specific "lammps" package (including how to
+  load the modules) use the module full name. Note that names that have a
+  trailing (E) are extensions provided by other modules.
   For example:
 
      $ module spider lammps/29_Sep_2021
---------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
 ```
 
-Running `module load lammps` will set up your environment to use LAMMPS.
-For this course, we will be using certain LAMMPS packages that are not included in the central module.
-We have built a version of LAMMPS that can be accessed by ensuring that the following commands are run prior to executing your LAMMPS command.
+Running `module load lammps` will set up your environment to use the default
+LAMMPS module on ARCHER2. For this course, we will be using the 23 June, 2022
+version of LAMMPS (instead of the default 29 September, 2021 version):
 
 ```bash
 module load lammps/23_Jun_2022
 ```
 
-Once your environment is set up, you will have access to the `lmp` LAMMPS executable.
-Note that you will only be able to run this on a single core on the ARCHER2 login node.
+Once your environment is set up, you will have access to the `lmp` LAMMPS
+executable. Note that you will only be able to run this on a single core on
+the ARCHER2 login node.
 
 
-### Submitting a job to the compute nodes
+### ARCHER2 system overview
 
-To run LAMMPS on multiple cores/nodes, you will need to submit a job to the ARCHER2 compute nodes.
-The compute nodes do not have access to the landing `home` file system -- this file system is to store useful/important information.
 
-{% include figure.html url="" max-width="60%" file="/fig/2_MD-primer/archer2_architecture.png" alt="ARCHER2 architecture" %}
+#### Architecture
 
-On ARCHER2, when submitting jobs to the compute nodes, make sure that you are in your `/work/ta100/ta100/<username>` directory, as the `/home` file system is not accessible to the compute nodes.
+The ARCHER2 HPE Cray EX system consists of a number of different node types.
+The ones visible to users are:
 
-For this course, we have prepared a number of exercises.
-You can get a copy of these exercises by running (make sure to run this from `/work`):
+* Login nodes
+* Compute nodes
+* Data analysis (pre-/post- processing) nodes
 
-[comment]: # (change to intro link)
+All of the node types have the same processors: AMD EPYC<sup>TM</sup> 7742,
+2.25GHz, 64-cores. All nodes are dual socket nodes so there are 128 cores per
+node.
+
+{% include figure.html url="" max-width="80%" file="/fig/archer2_architecture.png"
+alt="ARCHER2 architecture diagram" caption="ARCHER2 architecture" %}
+
+#### Compute nodes
+
+There are 5,860 compute nodes in total, giving 750,080 compute cores on the
+full ARCHER2 system. Most of these (5,276 nodes) have 256 GiB memory per node,
+a smaller number (584 nodes) have 512 GiB memory per node. All of the compute
+nodes are linked together using the high-performance HPE Slingshot
+interconnect.
+
+Access to the compute nodes is controlled by the Slurm scheduling system which
+supports both batch jobs and interactive jobs.
+
+Compute node summary:
+
+| | ARCHER2 |
+|-|---------|
+| Processors | 2x AMD EPYC Zen2 (Rome) 7742, 2.25 GHz, 64-core |
+| Cores per node | 128 |
+| NUMA | 8 NUMA regions per node, 16 cores per NUMA region |
+| Memory Capacity | 256/512 GB DDR 3200, 8 memory channels |
+| Memory Bandwidth | >380 GB/s per node |
+| Interconnect Bandwidth | 25 GB/s per node bi-directional |
+
+#### Storage
+
+There are three different storage systems available on the current ARCHER2
+service:
+
+* Home file systems
+* Work file systems
+* RDF as a Service (RDFaaS)
+
+### Running LAMMPS on the compute nodes
+
+We will now launch a first LAMMPS job from the compute nodes. The login nodes
+are shared resources on which we have limited the amount of cores that can be
+used for a job. To run LAMMPS simulations on a large number of cores, we must
+use the compute nodes.
+
+The `\home` filesystem is not accessible from the compute nodes. As such, we
+will need to submit our jobs from the `\work` directory. Every user has a
+directory in `\work` associated to their project code. For this course, the
+project code is `ta100`, so we all have a directory called:
+`/work/ta100/ta100/<username>` (make sure to replace `username` with your
+username).
+
+We have prepared a number of exercises for today. You can either download
+these by running:
+
 ```bash
-svn checkout https://github.com/EPCCed/archer2-intro-to-lammps/
+svn checkout https://github.com/EPCCed/archer2-intro-to-lammps/trunk/exercises
 ```
 
-[comment]: # (change exercise names and file names)
-Once this is downloaded, please  `cd exercises/1-performance-exercise/`.
+or by copying it from the shared part of the `ta100` project directory:
+
+```bash
+cp -r /work/ta100/shared/exercises ./
+```
+
+For this session, we'll be looking at `exercises/1-performance-exercise/`.
+
 In this directory you will find three files:
 
   - `sub.slurm` is a Slurm submission script -- this will let you submit jobs to the compute nodes.

@@ -9,7 +9,6 @@ questions:
 objectives:
 - "Understand how this course works, how I can get help and how I can give feedback."
 keypoints:
-- "We should all understand and follow the [ARCHER2 Code of Conduct](https://www.archer2.ac.uk/training/code-of-conduct/) to ensure this course is conducted in the best teaching environment."
 - "The course will be flexible to best meet the learning needs of the attendees."
 - "Feedback is an essential part of our training to allow us to continue to improve and make sure the course is as useful as possible to attendees."
 ---
@@ -21,9 +20,8 @@ Rather than having separate lectures and practical sessions, this course is taug
 learning key skills and information throughout the course. Typically, this follows the method of
 the instructor demonstrating and then the attendees doing along with the instructor.
 
-[comment]: # (many helpers?)
-There are many helpers available to assist you and to answer any questions you may have as we
-work through the material together. You should also feel free to ask questions of the instructor
+The instructors are available to assist you and to answer any questions you may have as we
+work through the material together. You should feel free to ask questions of the instructor
 whenever you like. The instructor will also provide many opportunities to pause and ask questions.
 
 We will also make use of a shared collaborative document - the *etherpad*. You will find a link
@@ -35,6 +33,19 @@ we take a copy of the information in the etherpad, remove any personally-identif
 and post this on the course archive page so you should always be able to come back and find any
 information you found useful.
 
+> ## Introductions
+>
+> Let's use the etherpad to introduce ourselves. Please go to this course's
+> etherpad and let us know the following:
+>  - Your name
+>  - Your place of work
+>  - Whether this is your first time using ARCHER2?
+>  - Whether this is your first time using LAMMPS?
+>  - Why are you interested in learning how to use LAMMPS?
+>  - What systems are you looking to simulate?
+>
+{: .challenge}
+
 ## Feedback
 
 Feedback is integral to how we approach training both during and after the course. In particular, we
@@ -43,7 +54,7 @@ content appropriately for the attendees, and feedback after the course to help u
 for the future.
 
 You will be issued with red and green "stickies" (or shown how to use their virtual equivalent for 
-online courses) to allow you give the instructor and helpers quick visual feedback on how you
+online courses) to allow you to give the instructor and helpers quick visual feedback on how you
 are getting on with the pace and the content of the course. If you are comfortable with the 
 pace/content then you should place your green sticky on the back of your laptop; if you are stuck,
 have questions, or are struggling with the pace/content then you should place the red sticky on
@@ -53,7 +64,7 @@ to use the stickies in other, specific situations.
 At the lunch break (and end of days for multi-day courses) we will also run a quick feedback
 activity to gauge how the course is matching onto attendees requirements. Instructors and helpers
 will review this feedback over lunch, or overnight, provide a summary of what we found at the
-start of the next session and, potentially, how the upcoming materiel/schedule will be changed
+start of the next session and, potentially, how the upcoming material/schedule will be changed
 to address the feedback.
 
 Finally, you will be provided with the opportunity to provide feedback on the course after it has

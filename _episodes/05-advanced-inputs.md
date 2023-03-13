@@ -171,13 +171,17 @@ Finally, we tell LAMMPS to run this section (with the computes and fixes) for
 run            5000
 ```
 
+### Restart files
+
 To allow the continuation of the simulation (with the caveat that it must
-continue to run in the same number of cores as it was), we can create a
-restart file:
+continue to run in the same number of cores as was originally used), we can
+create a restart file:
 
 This binary file contains information about system topology, force-fields, but
 not about computes, fixes, etc, these need to be re-defined in a new input
 file.
+
+You can write a restart file with the command:
 
 ```
 write_restart  restart2.lj.equil
@@ -190,6 +194,24 @@ configuration, or even LAMMPS version.
 ```
 write_data  lj.equil.data
 ```
+
+You can use a restart or data file to start/restart a simulation by using a
+`read` command. For example:
+
+```bash
+read_restart restart2.lj.equil
+```
+
+will read in our restart file and use that final point as the starting point
+of our new simulation.
+
+Similarly:
+
+```bash
+read_data lj.equil.data
+```
+
+will do the same with the data file we've output (or any other data file).
 
 ## Variables and loops
 
@@ -205,12 +227,15 @@ and then style and arguments, for example:
 variable temperature equal 1.0
 ```
 
-There are several styles (see the manual), but of note are `delete`, `index`,
-`loop`, and `equal`. `equal` is the workhorse of the styles, and it can set a
-variable to a number, `thermo` keywords, maths operators or functions, among
-other things. `delete` unsets a variable. `loop` and `index` are similar, with
-the difference that `loop` accepts an integer / range, while `index` accepts a
-list of strings.
+There are several [variable styles](https://docs.lammps.org/variable.html). Of
+particular note are:
+ - `equal` is the workhorse of the styles, and it can set a variable to a
+    number, `thermo` keywords, maths operators or functions, among other things.
+ - `delete` unsets a variable.
+ - `loop` and `index` are similar, and will result in the variable changing to
+   the next value in a list every time a `next` command is seen. The
+   difference that `loop` accepts an integer or range, while `index` accepts a
+   list of strings.
 
 To use a variable later in the script, just prepend a dollar sign, like so:
 
@@ -243,7 +268,6 @@ clear
 next d
 jump SELF
 ```
-
 
 > ## LAMMPS Rerun
 >

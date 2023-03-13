@@ -15,17 +15,69 @@ keypoints:
 - "Adding more cores is not always the most effective way of increasing performance."
 ---
 
+## ARCHER2 system overview
+
+### Architecture
+
+The ARCHER2 HPE Cray EX system consists of a number of different node types.
+The ones visible to users are:
+
+* Login nodes
+* Compute nodes
+* Data analysis (pre-/post- processing) nodes
+
+All of the node types have the same processors: AMD EPYC<sup>TM</sup> 7742,
+2.25GHz, 64-cores. All nodes are dual socket nodes so there are 128 cores per
+node.
+
+{% include figure.html url="" max-width="80%" file="/fig/archer2_architecture.png"
+alt="ARCHER2 architecture diagram" caption="ARCHER2 architecture" %}
+
+### Compute nodes
+
+There are 5,860 compute nodes in total, giving 750,080 compute cores on the
+full ARCHER2 system. Most of these (5,276 nodes) have 256 GiB memory per node,
+a smaller number (584 nodes) have 512 GiB memory per node. All of the compute
+nodes are linked together using the high-performance HPE Slingshot
+interconnect.
+
+Access to the compute nodes is controlled by the Slurm scheduling system which
+supports both batch jobs and interactive jobs.
+
+Compute node summary:
+
+| | ARCHER2 |
+|-|---------|
+| Processors | 2x AMD EPYC Zen2 (Rome) 7742, 2.25 GHz, 64-core |
+| Cores per node | 128 |
+| NUMA | 8 NUMA regions per node, 16 cores per NUMA region |
+| Memory Capacity | 256/512 GB DDR 3200, 8 memory channels |
+| Memory Bandwidth | >380 GB/s per node |
+| Interconnect Bandwidth | 25 GB/s per node bi-directional |
+
+### Storage
+
+There are three different storage systems available on the current ARCHER2
+service:
+
+* Home file systems
+* Work file systems
+* RDF as a Service (RDFaaS)
 
 ## What is LAMMPS?
 
-LAMMPS (Large-scale Atomic/Molecular Massively Parallel Simulator) is a versatile classical molecular dynamics software package developed by Sandia National Laboratories and by its wide user-base.
+LAMMPS (Large-scale Atomic/Molecular Massively Parallel Simulator) is a
+versatile classical molecular dynamics software package developed by Sandia
+National Laboratories and by its wide user-base.
 
-It can be downloaded from [https://lammps.sandia.gov/download.html](https://lammps.sandia.gov/download.html)
+It can be downloaded from
+[https://lammps.sandia.gov/download.html](https://lammps.sandia.gov/download.html)
 
-Everything we are covering today (and a lot of other info) can be found in the [LAMMPS User Manual](https://lammps.sandia.gov/doc/Manual.html)
+Everything we are covering today (and a lot of other info) can be found in the
+[LAMMPS User Manual](https://lammps.sandia.gov/doc/Manual.html)
 
 
-## Running LAMMPS on ARCHER2
+## Using a LAMMPS module on ARCHER2
 
 ARCHER2 uses a module system. In general, you can run LAMMPS on ARCHER2 by
 using the LAMMPS module. You can use the `module spider` command to list all
@@ -70,58 +122,7 @@ Once your environment is set up, you will have access to the `lmp` LAMMPS
 executable. Note that you will only be able to run this on a single core on
 the ARCHER2 login node.
 
-
-### ARCHER2 system overview
-
-
-#### Architecture
-
-The ARCHER2 HPE Cray EX system consists of a number of different node types.
-The ones visible to users are:
-
-* Login nodes
-* Compute nodes
-* Data analysis (pre-/post- processing) nodes
-
-All of the node types have the same processors: AMD EPYC<sup>TM</sup> 7742,
-2.25GHz, 64-cores. All nodes are dual socket nodes so there are 128 cores per
-node.
-
-{% include figure.html url="" max-width="80%" file="/fig/archer2_architecture.png"
-alt="ARCHER2 architecture diagram" caption="ARCHER2 architecture" %}
-
-#### Compute nodes
-
-There are 5,860 compute nodes in total, giving 750,080 compute cores on the
-full ARCHER2 system. Most of these (5,276 nodes) have 256 GiB memory per node,
-a smaller number (584 nodes) have 512 GiB memory per node. All of the compute
-nodes are linked together using the high-performance HPE Slingshot
-interconnect.
-
-Access to the compute nodes is controlled by the Slurm scheduling system which
-supports both batch jobs and interactive jobs.
-
-Compute node summary:
-
-| | ARCHER2 |
-|-|---------|
-| Processors | 2x AMD EPYC Zen2 (Rome) 7742, 2.25 GHz, 64-core |
-| Cores per node | 128 |
-| NUMA | 8 NUMA regions per node, 16 cores per NUMA region |
-| Memory Capacity | 256/512 GB DDR 3200, 8 memory channels |
-| Memory Bandwidth | >380 GB/s per node |
-| Interconnect Bandwidth | 25 GB/s per node bi-directional |
-
-#### Storage
-
-There are three different storage systems available on the current ARCHER2
-service:
-
-* Home file systems
-* Work file systems
-* RDF as a Service (RDFaaS)
-
-### Running LAMMPS on the compute nodes
+## Running LAMMPS on ARCHER2 compute nodes
 
 We will now launch a first LAMMPS job from the compute nodes. The login nodes
 are shared resources on which we have limited the amount of cores that can be
@@ -155,10 +156,12 @@ In this directory you will find three files:
   - `sub.slurm` is a Slurm submission script -- this will let you submit jobs
     to the compute nodes. As written, it will run a single-core job -- we will
     be editing it to run on more cores.
-  - `in.ethanol` is the LAMMPS input script that we will be using for this exercise.
-    This script is meant to run a small simulation of 125 ethanol molecules in a periodic box.
-  - `data.ethanol` is a LAMMPS data file for a single ethanol molecule.
-    This template will be copied by the `in.lammps` file to generate our simulation box.
+  - `in.ethanol` is the LAMMPS input script that we will be using for this
+    exercise -- this script will run a small simulation of 125 ethanol
+    molecules.
+  - `data.ethanol` is a LAMMPS data file for a single ethanol molecule --
+    this single molecule will be copied by LAMMPS to generate our simulation
+    box.
 
 > ## Why ethanol?
 > 
@@ -171,7 +174,7 @@ In this directory you will find three files:
 > ethanol seemed to fit both of those.
 {: .callout}
 
-To submit your first job on ARCHER2, please run:
+You can submit your first job on ARCHER2 by running:
 
 ```bash
 sbatch sub.slurm
@@ -180,46 +183,55 @@ sbatch sub.slurm
 You can check the progress of your job by running `squeue -u ${USER}`. Your 
 job state will go from `PD` (pending) to `R` (running) to `CG` (cancelling). 
 Once your job is complete, it will have produced a file called 
-`slurm-####.out` -- this file contains the STDOUT and STDERR produced by your 
-job.
+`slurm-####.out` -- this file contains the standard output and standard error
+produced by your job.
+
+## A brief overview of the LAMMPS log file
 
 The job will also produce a LAMMPS log file `log.out`. In this file, you will 
 find all of the thermodynamic outputs that were specified in the LAMMPS 
-`thermo_style`, as well as some very useful performance information! After 
-every `run` is complete, LAMMPS outputs a series of information that can be 
-used to better understand the behaviour of your job.
+`thermo_style`, as well as some very useful performance information! We will
+explore the LAMMPS log file in more details later but, for now, we will
+concentrate on the LAMMPS performance information output at the end of the log
+file. This will help us to understand what our simulation is doing, and where
+we can speed it up.
+
+Running:
+
+```bash
+tail -n 27 log.lammps
+```
+
+will output the following:
 
 ```
-Loop time of 476.073 on 1 procs for 10000 steps with 6561 atoms
-
-Performance: 1.815 ns/day, 13.224 hours/ns, 21.005 timesteps/s
 100.0% CPU use with 1 MPI tasks x 1 OpenMP threads
 
 MPI task timing breakdown:
 Section |  min time  |  avg time  |  max time  |%varavg| %total
 ---------------------------------------------------------------
-Pair    | 152.27     | 152.27     | 152.27     |   0.0 | 31.98
-Bond    | 21.617     | 21.617     | 21.617     |   0.0 |  4.54
-Kspace  | 24.884     | 24.884     | 24.884     |   0.0 |  5.23
-Neigh   | 273.91     | 273.91     | 273.91     |   0.0 | 57.53
-Comm    | 2.0977     | 2.0977     | 2.0977     |   0.0 |  0.44
-Output  | 0.000598   | 0.000598   | 0.000598   |   0.0 |  0.00
-Modify  | 0.90765    | 0.90765    | 0.90765    |   0.0 |  0.19
-Other   |            | 0.39       |            |       |  0.08
+Pair    | 16.433     | 16.433     | 16.433     |   0.0 | 32.67
+Bond    | 2.2103     | 2.2103     | 2.2103     |   0.0 |  4.39
+Kspace  | 2.4733     | 2.4733     | 2.4733     |   0.0 |  4.92
+Neigh   | 28.84      | 28.84      | 28.84      |   0.0 | 57.33
+Comm    | 0.21298    | 0.21298    | 0.21298    |   0.0 |  0.42
+Output  | 0.0039677  | 0.0039677  | 0.0039677  |   0.0 |  0.01
+Modify  | 0.090959   | 0.090959   | 0.090959   |   0.0 |  0.18
+Other   |            | 0.03871    |            |       |  0.08
 
 Nlocal:           6561 ave        6561 max        6561 min
 Histogram: 1 0 0 0 0 0 0 0 0 0
-Nghost:           8066 ave        8066 max        8066 min
+Nghost:           8301 ave        8301 max        8301 min
 Histogram: 1 0 0 0 0 0 0 0 0 0
-Neighs:    1.29863e+06 ave 1.29863e+06 max 1.29863e+06 min
+Neighs:    1.13645e+06 ave 1.13645e+06 max 1.13645e+06 min
 Histogram: 1 0 0 0 0 0 0 0 0 0
 
-Total # of neighbors = 1298629
-Ave neighs/atom = 197.93157
+Total # of neighbors = 1136450
+Ave neighs/atom = 173.21292
 Ave special neighs/atom = 7.3333333
-Neighbor list builds = 10000
+Neighbor list builds = 1000
 Dangerous builds not checked
-Total wall time: 0:08:45
+Total wall time: 0:01:41
 ```
 
 The ultimate aim is always to get your simulation to run in a sensible amount 

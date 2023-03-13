@@ -5,8 +5,7 @@
 #SBATCH --nodes=1
 #SBATCH --time=0:20:0
 #SBATCH --cpus-per-task=1
-# change --ntasks to choose how many cores to run in
-#SBATCH --ntasks=1
+#SBATCH --tasks-per-node=1
 
 # The budget code of the project
 #SBATCH --account=ta100

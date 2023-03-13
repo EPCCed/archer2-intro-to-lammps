@@ -158,11 +158,15 @@ will use.
 pair_style  lj/cut 3.5
 ```
 
-In this case, Lennard-Jones interactions, cut at 3.5 Å. Cutting the
-interactions at a certain distance (as opposed to calculating interactions up
-to an 'infinite' distance, drastically reduces the computation time. This
+In this case, we are using Lennard-Jones interactions, cut at 3.5 Å. Cutting
+the interactions at a certain distance (as opposed to calculating interactions
+up to an 'infinite' distance, drastically reduces the computation time. This
 approximation is only valid because the LJ potential is asymptotic to zero at
 high *d* distance between particles.
+
+{% include figure.html url="" max-width="60%" file="/fig/2_MD-primer/lj_potential_new.png" alt="Lattice" %}
+
+and another test
 
 {% include figure.html url="" max-width="60%" file="/fig/2_MD-primer/lj_potential_new.png" alt="Lattice" %}
 
@@ -175,8 +179,10 @@ cutoff equal to zero.
 pair_modify shift yes
 ```
 
-Next we set the LJ parameters for the interactions between atom types `1` and `1` (the only we have, but there can be more), ε, the maximum depth of the energy well, and σ, the zero-crossing distance for the potential.
-Note that these are both relative to the non-shifted potential.
+Next we set the LJ parameters for the interactions between atom types `1` and
+`1` (the only we have, but there can be more), ε, the maximum depth of the
+energy well, and σ, the zero-crossing distance for the potential. Note that
+these are both relative to the non-shifted potential.
 
 ```
 pair_coeff  1 1 1.0 1.0

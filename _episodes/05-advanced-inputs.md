@@ -15,33 +15,68 @@ keypoints:
 
 ## Advanced input commands
 
-LAMMPS has a very powerful suite for calculating, and outputting all kinds of physical properties during the simulation.
-Calculations are most often under a `compute` command, and then the output is handled by a `fix` command.
-As an example, we will now see three examples, but there are (at the time of writing) over 150 different `compute` commands with many options each).
+LAMMPS has a very powerful suite for calculating, and outputting all kinds of
+physical properties during the simulation. Calculations are most often under a
+[compute command](https://docs.lammps.org/computes.html), and then the output
+is handled by a [fix command](https://docs.lammps.org/fixes.html). We will now
+look at three examples, but there are (at the time of writing) over 150
+different `compute` commands with many options each.
 
-The first is a Radial Distribution Function, _g_(_r_), describes how the density of a particles varies as a function of the distance to the reference particle, compared with an uniform distribution (that is, at r → ∞, _g_(_r_) → 1).
-Briefly, the `compute` command below, named `RDF` and applied to the atom-group `all`, is a compute of style `rdf`, with 150 bins for the RDF histogram, with a `cutoff` at 3.5σ.
-There are optional parameters for calculating RDFs between specific pairs (or groups of pairs) of atom types, see the manual for more information.
+### Radial distribution functions (RDFs)
+
+First, we will look at the Radial Distribution Function (RDF), _g_(_r_). This
+describes how the density of a particles varies as a function of the distance
+to a reference particle, compared with a uniform distribution (that is, at r →
+∞, _g_(_r_) → 1). We can make LAMMPS compute the RDF by adding the following
+lines to our input script:
 
 ```
 compute        RDF all rdf 150 cutoff 3.5
 fix            RDF_OUTPUT all ave/time 25 100 5000 c_RDF[*] file rdf_lj.out mode vector
 ```
 
-The compute command is instantaneous, that is, they calculate the values for the current time-step, but that doesn't mean they calculate quantities every time-step.
-A compute only calculates quantities when needed, _i.e._, when called by another command.
-In this case, the `fix ave/time` command, that averages a quantity over time, and outputs it over a long timescale.
-The parameters are: `RDF_OUTPUT` is the name of the fix, `all` is the group of particles it applies to, `ave/time` is the style of fix (there are many others).
-Then, the group of three numbers `25 100 5000` are the `Nevery`, `Nrepeat`, `Nfreq` arguments.
-These can be quite tricky to understand, as they interplay with each other.
-`Nfreq` is how often a value is written to file, `Nrepeat` is how many sets of values we want to average over (number of samples), and `Nevery` is how many time-steps in between samples.
-So, for example, an `Nevery` of 2, with `Nrepeat` of 3, and `Nfreq` of 100 means that at every time-step multiple of 100, there will be an average written to file, that was calculated by taking 3 samples, 2 time-steps apart -- _i.e._, time-steps 96, 98, and 100 are averaged, and the average is written to file, and the same at time-steps 196, 198, and 200, etc.
-In this case, we take a sample every 25 time-steps, 100 times, and output at time-step number 5000 -- so from time-step 2500 to 5000, sampling every 25 time-steps.
-This means that `Nfreq` must be a multiple of `Nevery`, and `Nevery` must be non-zero even if `Nrepeat = 1`.
-The following argument, `c_RDF[*]`, is the quantity to be averaged over.
-The beginning `c_` indicates this is a compute ID, and the `[*]` wildcard in conjunction with `mode vector` makes the fix calculate the average for all the columns in the compute ID.
-Finally, the `file rdf_lj.out` argument tells LAMMPS where to write the data to.
-This file looks something like this:
+We've named this `compute` command `RDF` and are applying it to the
+atom-group `all`. The compute is of style `rdf`, and we have set it to have
+with 150 bins for the RDF histogram (e.g. there are 150 discrete distances at
+which atoms can be placed). We've set a maximum cutoff of 3.5σ, above which we
+stop considering particles.
+
+Compute commands are instantaneous -- they calculate the values for
+the current time-step, but that doesn't mean they calculate quantities every
+time-step. A compute only calculates quantities when needed, _i.e._, when
+called by another command. In this case, we will use our compute with the
+`fix ave/time` command, that averages a quantity over time, and outputs it
+over a long timescale.
+
+Our `fix ave/time` has the following parameters:
+ - `RDF_OUTPUT` is the name of the fix, `all` is the group of particles it
+   applies to.
+ - `ave/time` is the style of fix (there are many others).
+ - The group of three numbers `25 100 5000` are the `Nevery`, `Nrepeat`,
+   `Nfreq` arguments. These can be quite tricky to understand, as they
+   interplay with each other.
+     - `Nfreq` is how often a value is written to file.
+     - `Nrepeat` is how many sets of values we want to average over (number of
+       samples)
+     - `Nevery` is how many time-steps in between samples.
+     - `Nfreq` must be a multiple of `Nevery`, and `Nevery` must be non-zero
+       even if `Nrepeat = 1`.
+     - So, for example, an `Nevery` of 2, with `Nrepeat` of 3, and `Nfreq` of
+       100 means that at every time-step multiple of 100, there will be an
+       average written to file, that was calculated by taking 3 samples, 2
+       time-steps apart. Time-steps 96, 98, and 100 are averaged, and the
+       average is written to file. Likewise at time-steps 196, 198, and 200,
+       etc.
+     - In this case, we take a sample every 25 time-steps, 100 times, and
+       output at time-step number 5000 -- so from time-step 2500 to 5000,
+       sampling every 25 time-steps.
+ - `c_RDF[*]`, is the compute that we want to average over time. `c_` defines
+   that we're wanting to use a compute, and `RDF` is our compute name. The
+   `[*]` wildcard in conjunction with `mode vector` makes the fix calculate the
+   average for all the columns in the compute ID.
+ - The `file rdf_lj.out` argument tells LAMMPS where to write the data to.
+
+For this command, the file looks something like this:
 
 ```
 # Time-averaged data for fix RDF_OUTPUT
@@ -78,7 +113,16 @@ This file looks something like this:
 > ```
 {: .callout}
 
-The next example calculates the mean-squared displacement of a group of atoms (in this case, `all`).
+### Mean-squared diplacement (MSD) and velocity autocorrelation functions (VACFs)
+
+We'll now look at generating mean-squared displacements (MSDs) and velocity
+autocorrelation functions (VACFs) using LAMMPS. Both of these are averaged
+quantitiesm and we will calculate these using a `compute` command, and call
+this command with a `fix ave/correlate` command.
+
+The MSD is a measure of the average displacement that particles travel from
+their origin position at some given time. The slope of the RDF is directly
+proportional to the diffusion coefficient of the system.
 
 ```
 compute        MSD all msd
@@ -86,7 +130,9 @@ fix            MSD_OUTPUT all ave/correlate 1 5000 5000 c_MSD[*] file msd_lj.out
 ```
 
 [comment]: # (never done MSD or time correlations, this needs some more explaining)
-The `fix` is then taking a sample every time-step, and at time-steps divisible by 5000 it calculates the time correlation and writes it down to file (so, we get two values, at the start of the run, and end of the run).
+The `fix` is then taking a sample every time-step, and at time-steps divisible
+by 5000 it calculates the time correlation and writes it down to file (so, we
+get two values, at the start of the run, and end of the run).
 
 And the final example is a velocity auto-correlation function
 
@@ -98,8 +144,12 @@ fix            VACF_OUTPUT all ave/correlate 1 2500 5000 c_VACF[*] file vacf_lj.
 [comment]: # (ditto from what I said about MSD)
 Here the fix is taking 2500 samples from time-step 2501 to 5000.
 
-The `dump` command allows to write trajectory files -- files that have the coordinates (and sometimes other properties) of each particle at a regular interval.
-These are important to create visual representations of the evolution of the simulation (AKA molecular movies) or to allow for the calculation of properties after the simulation is done, without the need to re-run the simulation.
+The `dump` command allows to write trajectory files -- files that have the
+coordinates (and sometimes other properties) of each particle at a regular
+interval. These are important to create visual representations of the
+evolution of the simulation (AKA molecular movies) or to allow for the
+calculation of properties after the simulation is done, without the need to
+re-run the simulation.
 
 ```
 dump           2 all custom 1000 positions.lammpstrj id x y z vx vy vz
@@ -107,24 +157,35 @@ dump_modify    2 sort id
 ```
 
 The `dump` command has id `2`, and will output information for `all` particles.
-The style is `custom`, and will write to file `positions.lammpstrj` every `1000` time-steps.
-The `custom` style is configurable, and we request that each atom has the following properties written to file: atom `id`, positions in the 3 directions, and velocity magnitudes in the 3 directions.
-The `dump_modify` command makes sure that the atoms are written in order of `id`, rather than in whatever order they happen to get calculated.
+The style is `custom`, and will write to file `positions.lammpstrj` every
+`1000` time-steps. The `custom` style is configurable, and we request that
+each atom has the following properties written to file: atom `id`, positions
+in the 3 directions, and velocity magnitudes in the 3 directions. The
+`dump_modify` command makes sure that the atoms are written in order of `id`,
+rather than in whatever order they happen to get calculated.
 
-Finally, we tell LAMMPS to run this section (with the computes and fixes) for `5000` time-steps.
+Finally, we tell LAMMPS to run this section (with the computes and fixes) for
+`5000` time-steps.
 
 ```
 run            5000
 ```
 
-To allow the continuation of the simulation (with the caveat that it must continue to run in the same number of cores as it was), we can create a restart file:
-This binary file contains information about system topology, force-fields, but not about computes, fixes, etc, these need to be re-defined in a new input file.
+To allow the continuation of the simulation (with the caveat that it must
+continue to run in the same number of cores as it was), we can create a
+restart file:
+
+This binary file contains information about system topology, force-fields, but
+not about computes, fixes, etc, these need to be re-defined in a new input
+file.
 
 ```
 write_restart  restart2.lj.equil
 ```
 
-An arguably better solution is to write a data file, which not only is a text file, but can then be used without restrictions in a different hardware configuration, or even LAMMPS version.
+An arguably better solution is to write a data file, which not only is a text
+file, but can then be used without restrictions in a different hardware
+configuration, or even LAMMPS version.
 
 ```
 write_data  lj.equil.data
@@ -132,19 +193,24 @@ write_data  lj.equil.data
 
 ## Variables and loops
 
-LAMMPS input scripts can be quite complex, and it can be useful to run the same script many times with only a small difference (for example, temperature).
-For this reason, LAMMPS have implemented variables and loops -- but this doesn't mean that we can only use variables *with* loops.
+LAMMPS input scripts can be quite complex, and it can be useful to run the
+same script many times with only a small difference (for example, temperature).
+For this reason, LAMMPS have implemented variables and loops -- but this
+doesn't mean that we can only use variables *with* loops.
 
-A variable in LAMMPS is defined with the keyword `variable`, then a `name`, and then style and arguments, for example:
+A variable in LAMMPS is defined with the keyword `variable`, then a `name`,
+and then style and arguments, for example:
 
 ```
 variable temperature equal 1.0
 ```
 
-There are several styles (see the manual), but of note are `delete`, `index`, `loop`, and `equal`.
-`equal` is the workhorse of the styles, and it can set a variable to a number, `thermo` keywords, maths operators or functions, among other things.
-`delete` unsets a variable.
-`loop` and `index` are similar, with the difference that `loop` accepts an integer / range, while `index` accepts a list of strings.
+There are several styles (see the manual), but of note are `delete`, `index`,
+`loop`, and `equal`. `equal` is the workhorse of the styles, and it can set a
+variable to a number, `thermo` keywords, maths operators or functions, among
+other things. `delete` unsets a variable. `loop` and `index` are similar, with
+the difference that `loop` accepts an integer / range, while `index` accepts a
+list of strings.
 
 To use a variable later in the script, just prepend a dollar sign, like so:
 

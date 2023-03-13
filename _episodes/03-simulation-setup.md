@@ -158,17 +158,19 @@ will use.
 pair_style  lj/cut 3.5
 ```
 
-In this case, we are using Lennard-Jones interactions, cut at 3.5 Å. Cutting
-the interactions at a certain distance (as opposed to calculating interactions
-up to an 'infinite' distance, drastically reduces the computation time. This
-approximation is only valid because the LJ potential is asymptotic to zero at
-high *d* distance between particles.
+LAMMPS has a large number of
+[pairwise interparticle interactions](https://docs.lammps.org/pair_style.html)
+available. In this case, we are using Lennard-Jones interactions, cut at 3.5 Å.
+Cutting the interactions at a certain distance (as opposed to calculating
+interactions up to an 'infinite' distance, drastically reduces the computation
+time. This approximation is only valid because the LJ potential is asymptotic
+to zero at high *d* distance between particles.
 
 {% include figure.html url="" max-width="60%" file="/fig/2_MD-primer/lj_potential_new.png" alt="Lattice" %}
 
 and another test
 
-{% include figure.html url="" max-width="60%" file="/fig/2_MD-primer/lj_potential_new.png" alt="Lattice" %}
+{% include figure.html url="" max-width="60%" file="/fig/2_MD-primer/lj_potential_new.jpg" alt="Lattice" %}
 
 To make sure there is no discontinuity at the cutoff point, we can shift the
 potential. This subtracts the value of the potential at the cutoff point

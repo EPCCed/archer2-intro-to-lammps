@@ -7,8 +7,8 @@ variable        PRESSURE    equal     10.0  # Pressure in atm
 variable        TIMESTEP    equal      1.0  # dt in fs
 variable        NEIGH_TIME  equal      1    # neigh_modify every x dt
 variable        EQUIL_TIME  equal   1000    # equilibrate system for # timesteps in NVT
-variable        PROD_TIME   equal  10000    # run simulation for # timesteps in total
-variable        OUT_TIME    equal   1000    # dt between thermo output
+variable        PROD_TIME   equal   1000    # run simulation for # timesteps in total
+variable        OUT_TIME    equal     10    # dt between thermo output
 variable        X_LENGTH    equal      8    # length of x side of the box
 variable        Y_LENGTH    equal      8    # length of y side of the box
 variable        Z_LENGTH    equal      8    # length of z side of the box

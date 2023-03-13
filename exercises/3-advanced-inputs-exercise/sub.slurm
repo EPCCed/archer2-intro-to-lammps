@@ -4,8 +4,10 @@
 #SBATCH --job-name=lmp_ex3
 #SBATCH --nodes=1
 #SBATCH --time=0:20:0
+#SBATCH --hint=nomultithread
+#SBATCH --distribution=block:block
+#SBATCH --tasks-per-node=128
 #SBATCH --cpus-per-task=1
-#SBATCH --ntasks=128
 
 # The budget code of the project
 #SBATCH --account=ta100

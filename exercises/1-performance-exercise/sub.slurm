@@ -4,8 +4,10 @@
 #SBATCH --job-name=lmp_ex1
 #SBATCH --nodes=1
 #SBATCH --time=0:20:0
-#SBATCH --cpus-per-task=1
+#SBATCH --hint=nomultithread
+#SBATCH --distribution=block:block
 #SBATCH --tasks-per-node=1
+#SBATCH --cpus-per-task=1
 
 # The budget code of the project
 #SBATCH --account=ta100
@@ -23,4 +25,4 @@ module load lammps/23_Jun_2022
 export OMP_NUM_THREADS=1
 
 # Launch the parallel job
-srun lmp -i in.ethanol -l log.${SLURM_NPROCS}cpus.${SLURM_JOB_ID}
+srun lmp -i in.ethanol -l ${SLURM_NPROCS}_cpus.log.${SLURM_JOB_ID}

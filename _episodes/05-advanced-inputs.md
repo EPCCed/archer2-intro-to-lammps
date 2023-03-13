@@ -178,4 +178,30 @@ next d
 jump SELF
 ```
 
+
+> ## LAMMPS Rerun
+>
+> LAMMPS allows us to take already generated trajectory (`dump`) files, and do
+> a re-run of the `simulation`, but allowing to calculate new properties.
+> In this exercise, you will run a LJ simulation, outputting the trajectory as
+> `nvt.lammpstrj` and, then, re-run the trajectory and calculate a RDF.
+> 
+> What differences do you see in runtime, and output between the two inputs?
+> How can you quickly plot the RDF, to check if your re-run was successful?
+> 
+> > ## Solution
+> > 
+> > A full run takes around 1m, while the re-run takes less 20 seconds. This
+> > effect would be even more evident on larger simulations. Re-runs are,
+> > comparatively, much faster than proper simulations.
+> > 
+> > To quickly plot the RDF, you can load gnuplot with `module load gnuplot`
+> > and, assuming your ssh session was started with X forwarding, you can
+> > start gnuplot with the `gnuplot` command, and plot the RDF with:
+> > `plot 'rdf_lj.out' using 2:3`.
+> > 
+> > 
+> {: .solution}
+{: .challenge}
+
 {% include links.md %}

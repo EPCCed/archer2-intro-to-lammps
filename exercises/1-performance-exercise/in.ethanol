@@ -8,10 +8,10 @@ variable        TIMESTEP    equal      1.0  # dt in fs
 variable        NEIGH_TIME  equal      1    # neigh_modify every x dt
 variable        EQUIL_TIME  equal   1000    # equilibrate system for # timesteps in NVT
 variable        PROD_TIME   equal  10000    # run simulation for # timesteps in total
-variable	OUT_TIME    equal   1000    # dt between thermo output
-variable	X_LENGTH    equal      8    # length of x side of the box
-variable	Y_LENGTH    equal      8    # length of y side of the box
-variable	Z_LENGTH    equal      8    # length of z side of the box
+variable        OUT_TIME    equal   1000    # dt between thermo output
+variable        X_LENGTH    equal      8    # length of x side of the box
+variable        Y_LENGTH    equal      8    # length of y side of the box
+variable        Z_LENGTH    equal      8    # length of z side of the box
 
 ##################################################################################
 #                                 Code                                           #
@@ -33,7 +33,7 @@ create_box      6 box bond/types 5               &
                       extra/special/per/atom 7   &
                       extra/angle/per/atom 6     &
                       extra/dihedral/per/atom 9
-molecule        CH3CH2OH /work/ta100/shared/exercises/1_performance/data.ethanol
+molecule        CH3CH2OH data.ethanol
 create_atoms    0 region start_box mol CH3CH2OH 6871
 
 ######################################################
@@ -46,23 +46,23 @@ angle_style     harmonic
 dihedral_style  opls
 kspace_style    pppm      0.0001
 
-mass		1 12.011000 # ECH
-mass		2 12.011000 # ECO
-mass		3  1.008000 # EHA
-mass		4  1.008000 # EHC
-mass		5  1.008000 # EHO
-mass		6 15.999000 # EOH
+mass            1 12.011000 # ECH
+mass            2 12.011000 # ECO
+mass            3  1.008000 # EHA
+mass            4  1.008000 # EHC
+mass            5  1.008000 # EHO
+mass            6 15.999000 # EOH
 
-set		type 1 charge -0.18
-set		type 2 charge  0.145
-set		type 3 charge  0.06
-set		type 4 charge  0.06
-set		type 5 charge  0.418
-set		type 6 charge -0.683
+set             type 1 charge -0.18
+set             type 2 charge  0.145
+set             type 3 charge  0.06
+set             type 4 charge  0.06
+set             type 5 charge  0.418
+set             type 6 charge -0.683
 
 pair_coeff      1  1  0.066  3.5 
-pair_coeff	2  2  0.066  3.5
-pair_coeff	3  3  0.03   2.5
+pair_coeff      2  2  0.066  3.5
+pair_coeff      3  3  0.03   2.5
 pair_coeff      4  4  0.03   2.5
 pair_coeff      5  5  0.03   2.5
 pair_coeff      6  6  0.17   3.12
@@ -81,7 +81,7 @@ angle_coeff     5  16.5   107.8
 angle_coeff     6  17.5   109.5
 angle_coeff     7  16.5   107.8
 
-dihedral_coeff	1  -0.356  -0.174  0.492  0.0
+dihedral_coeff  1  -0.356  -0.174  0.492  0.0
 dihedral_coeff  2   0.0      0.0   0.352  0.0
 dihedral_coeff  3   0.0      0.0   0.3    0.0
 dihedral_coeff  4   0.0      0.0   0.468  0.0
@@ -100,20 +100,20 @@ neigh_modify    delay 0 every ${NEIGH_TIME} check no
 # Nose-Hoover thermobarostat #
 ##############################
 
-velocity	all create ${TEMPERATURE} 4928459 rot yes dist gaussian
-fix		1 all nvt temp ${TEMPERATURE} ${TEMPERATURE} 20.0
+velocity        all create ${TEMPERATURE} 4928459 rot yes dist gaussian
+fix             1 all nvt temp ${TEMPERATURE} ${TEMPERATURE} 20.0
 
 #########################################
 # Rebalance number of particles per CPU #
 # Can speed up on muliple cores         #
 #########################################
-#fix    		bal all balance 1000 1.05 shift xy 10 1.05
+#fix             bal all balance 1000 1.05 shift xy 10 1.05
 
 thermo_style    custom step cpu temp etotal epair elong evdwl vol lx press
-thermo		${OUT_TIME}
+thermo          ${OUT_TIME}
 
-timestep	${TIMESTEP}
+timestep        ${TIMESTEP}
 
-run		${EQUIL_TIME}
+run             ${EQUIL_TIME}
 
-run		${PROD_TIME}
+run             ${PROD_TIME}

@@ -6,7 +6,9 @@ questions:
 - "What is LAMMPS?"
 - "How do I run jobs in ARCHER2?"
 objectives:
-- "Understand what LAMMPS is, how to launch jobs on ARCHER2 using the slurm batch system, and how benchmarking can help increase performance."
+- "Understand what LAMMPS is."
+- Learn how to launch jobs on ARCHER2 using the slurm batch system."
+- "Run a LAMMPS benchmark exercise to see how benchmarking can help improve code performance."
 keypoints:
 - "LAMMPS is a versatile software used in a wide range of subjects to run classical molecular dynamics simulations."
 - "Running jobs on ARCHER2 requires a submission to the Slurm batch system using specific account, budget, queue, and qos keywords."

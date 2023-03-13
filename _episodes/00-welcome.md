@@ -55,7 +55,7 @@ content appropriately for the attendees, and feedback after the course to help u
 for the future.
 
 You will be issued with red and green "stickies" (or shown how to use their virtual equivalent for 
-online courses) to allow you give the instructor and helpers quick visual feedback on how you
+online courses) to allow you to give the instructor and helpers quick visual feedback on how you
 are getting on with the pace and the content of the course. If you are comfortable with the 
 pace/content then you should place your green sticky on the back of your laptop; if you are stuck,
 have questions, or are struggling with the pace/content then you should place the red sticky on
@@ -65,7 +65,7 @@ to use the stickies in other, specific situations.
 At the lunch break (and end of days for multi-day courses) we will also run a quick feedback
 activity to gauge how the course is matching onto attendees requirements. Instructors and helpers
 will review this feedback over lunch, or overnight, provide a summary of what we found at the
-start of the next session and, potentially, how the upcoming materiel/schedule will be changed
+start of the next session and, potentially, how the upcoming material/schedule will be changed
 to address the feedback.
 
 Finally, you will be provided with the opportunity to provide feedback on the course after it has

@@ -14,8 +14,10 @@ keypoints:
 
 Attendees of this course will get access to the ARCHER2 HPC facility. You will
 have the ability to request an account and to login to ARCHER2 before the
-course begins. If you are not able to login, you can come to this pre-session
-where the instructors will help make sure you can login to ARCHER2.
+course begins. In this session, we will talk you through getting access to
+ARCHER2. Please be aware that you will need to follow the
+[ARCHER2 Code of Conduct](https://www.archer2.ac.uk/training/code-of-conduct/)
+as a condition for access.
 
 Note that if you are not able to login to ARCHER2 and do not attend this 
 session, you may struggle to run the course exercises as these were designed 

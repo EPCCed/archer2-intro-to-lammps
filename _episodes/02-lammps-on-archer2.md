@@ -152,8 +152,9 @@ For this session, we'll be looking at `exercises/1-performance-exercise/`.
 
 In this directory you will find three files:
 
-  - `sub.slurm` is a Slurm submission script -- this will let you submit jobs to the compute nodes.
-    Initially, it will run a single core job, but we will be editing it to run on more cores.
+  - `sub.slurm` is a Slurm submission script -- this will let you submit jobs
+    to the compute nodes. As written, it will run a single-core job -- we will
+    be editing it to run on more cores.
   - `in.ethanol` is the LAMMPS input script that we will be using for this exercise.
     This script is meant to run a small simulation of 125 ethanol molecules in a periodic box.
   - `data.ethanol` is a LAMMPS data file for a single ethanol molecule.

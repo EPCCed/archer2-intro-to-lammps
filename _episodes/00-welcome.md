@@ -21,9 +21,8 @@ Rather than having separate lectures and practical sessions, this course is taug
 learning key skills and information throughout the course. Typically, this follows the method of
 the instructor demonstrating and then the attendees doing along with the instructor.
 
-[comment]: # (many helpers?)
-There are many helpers available to assist you and to answer any questions you may have as we
-work through the material together. You should also feel free to ask questions of the instructor
+The instructors are available to assist you and to answer any questions you may have as we
+work through the material together. You should feel free to ask questions of the instructor
 whenever you like. The instructor will also provide many opportunities to pause and ask questions.
 
 We will also make use of a shared collaborative document - the *etherpad*. You will find a link
@@ -34,6 +33,19 @@ information to share with the class then please do add it to the etherpad. At th
 we take a copy of the information in the etherpad, remove any personally-identifiable information 
 and post this on the course archive page so you should always be able to come back and find any
 information you found useful.
+
+> ## Introductions
+>
+> Let's use the etherpad to introduce ourselves. Please go to this course's
+> etherpad and let us know the following:
+>  - Your name
+>  - Your place of work
+>  - Whether this is your first time using ARCHER2?
+>  - Whether this is your first time using LAMMPS?
+>  - Why are you interested in learning how to use LAMMPS?
+>  - What systems are you looking to simulate?
+>
+{: .challenge}
 
 ## Feedback
 

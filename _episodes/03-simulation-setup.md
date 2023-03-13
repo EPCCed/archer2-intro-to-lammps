@@ -148,22 +148,28 @@ The final result is a box like this:
 
 ### Inter-particle interactions
 
-Now that we have initial positions for our particles in a simulation box, we have to define how they will interact with each-other.
+Now that we have initial positions for our particles in a simulation box, we
+have to define how they will interact with each-other.
 
-The first line in this section defines the style of interaction our particles will use.
+The first line in this section defines the style of interaction our particles
+will use.
 
 ```
 pair_style  lj/cut 3.5
 ```
 
-In this case, Lennard-Jones interactions, cut at 3.5 Å.
-Cutting the interactions at a certain distance (as opposed to calculating interactions up to an 'infinite' distance, drastically reduces the computation time.
-This approximation is only valid because the LJ potential is asymptotic to zero at high *d* distance between particles.
+In this case, Lennard-Jones interactions, cut at 3.5 Å. Cutting the
+interactions at a certain distance (as opposed to calculating interactions up
+to an 'infinite' distance, drastically reduces the computation time. This
+approximation is only valid because the LJ potential is asymptotic to zero at
+high *d* distance between particles.
 
 {% include figure.html url="" max-width="60%" file="/fig/2_MD-primer/lj_potential_new.png" alt="Lattice" %}
 
-To make sure there is no discontinuity at the cutoff point, we can shift the potential.
-This subtracts the value of the potential at the cutoff point (which should be very low) from the entire function, making the energy at the cutoff equal to zero.
+To make sure there is no discontinuity at the cutoff point, we can shift the
+potential. This subtracts the value of the potential at the cutoff point
+(which should be very low) from the entire function, making the energy at the
+cutoff equal to zero.
 
 ```
 pair_modify shift yes

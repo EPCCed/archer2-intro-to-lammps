@@ -15,21 +15,33 @@ keypoints:
 
 ## What is Molecular Dynamics
 
-Molecular Dynamics is, simply, the application of Newton's laws of motion to systems of particles that can range in size from atoms, course-grained moieties, entire molecules, or even grains of sand.
-In practical terms, any MD software follows the same basic steps:
+Molecular Dynamics is the application of Newton's laws of motion to systems of
+particles that can range in size from atoms, course-grained moieties, entire
+molecules, or even grains of sand. In practical terms, any MD software follows
+the same basic steps:
 
-  1. Take the initial positions of the particles in the simulation box and calculate the total force that apply to each particle, using the chosen force-field.
-  2. Use the calculated forces to calculate the acceleration to add to each particle;
-  3. Use the acceleration to calculate the new velocity of each particle;
-  4. Use the the new velocity of each particle, and the defined time-step, to calculate a new position for each particle.
+  1. Take the initial positions of the particles in the simulation box and
+     calculate the total force that apply to each particle, using the chosen
+     force-field.
+  2. Use the calculated forces to calculate the acceleration to add to each
+     particle.
+  3. Use the acceleration to calculate the new velocity of each particle.
+  4. Use the the new velocity of each particle, and the defined time-step, to
+     calculate a new position for each particle.
+  5. Repeat ad nauseum.
 
-With the new particle positions, the cycle continues, one very small time-step at a time.
+With the new particle positions, the cycle continues, one very small time-step
+at a time.
 
 {% include figure.html url="" max-width="60%" file="/fig/2_MD-primer/MD.png" alt="How MD Works" %}
 
-With this in mind, we can take a look at a very simple example of a LAMMPS input file, `in.lj`, and discuss each command -- and their related concepts -- one by one.
-The order that the commands appear in **can** be important, depending on the exact details.
-Always refer to the LAMMPS manual to check.
+With this in mind, we can take a look at a very simple example of a LAMMPS
+input file, `in.lj`, and discuss each command -- and their related concepts --
+one by one. The order that the commands appear in **can** be important,
+depending on the exact details. Always refer to the LAMMPS manual to check.
+
+For this session, we'll be looking at the `2-lj-exercise/in.lj_exercise`
+file in your `exercises` directory.
 
 ## Simulation setup
 
@@ -40,23 +52,28 @@ This can be achieved by the `units` command:
 units         lj
 ```
 
-[comment]: # (link?)
-LAMMPS has several different unit styles, useful in different types of simulations.
-In this example, we are using `lj`, or Lennard-Jones units.
-These are dimensionless units, that are defined on the LJ potential parameters.
-They are computationally advantageous because they're usually close to unity, and required less precise (lower number of bits) floating point variables -- which in turn reduced the memory requirements, and increased calculation speed.
+LAMMPS has several different [unit styles](https://docs.lammps.org/units.html),
+useful in different types of simulations. In this example, we are using `lj`,
+or Lennard-Jones (LJ) units. These are dimensionless units, that are defined
+on the LJ potential parameters. They are computationally advantageous because
+they're usually close to unity, and required less precise (lower number of
+bits) floating point variables -- which in turn reduced the memory
+requirements, and increased calculation speed.
 
-The next line defines what style of `atoms` (LAMMPS's terminology is for particle) to use.
+The next line defines what style of `atoms` (LAMMPS's terminology is for
+particle) to use:
 
 ```
 atom_style    atomic
 ```
 
-This impacts on what attributes each atom has associated with it -- this cannot be changed during a simulation.
-Every style stores: coordinates, velocities, atom IDs, and atom types.
-The `atomic` style doesn't add any further attributes, but other styles will store additional information.
+The [atom style](https://docs.lammps.org/atom_style.html) impacts on what
+attributes each atom has associated with it -- this cannot be changed during
+a simulation. Every style stores: coordinates, velocities, atom IDs, and atom
+types. The `atomic` style doesn't add any further attributes, but other styles
+will store additional information.
 
-We then choose 3 dimensions.
+We then define the number of dimensions in our system:
 
 ```
 dimension     3
@@ -70,36 +87,46 @@ The boundary command sets the styles for the boundaries for the simulation box.
 boundary      p p p
 ```
 
-Each of the three letters after the keyword corresponds to a direction (x, y, z), and `p` means that the selected boundary is to be periodic.
-Other boundary conditions are available (fixed, shrink-wrapped, and shrink-wrapped with minimum).
-
+Each of the three letters after the keyword corresponds to a direction (x, y,
+z), and `p` means that the selected boundary is to be periodic. Other boundary
+conditions are available (fixed, shrink-wrapped, and shrink-wrapped with
+minimum).
 
 {% include figure.html url="" max-width="80%" file="/fig/2_MD-primer/PBC.png" alt="Periodic Boundary Conditions" %}
 
-Periodic boundary conditions allow the approximation of an infinite system by simulating only a small part, a unit-cell.
-The most common shapes of (3D) unit-cell is cuboidal, but any shape that completely tessellates 3D space can be used.
-The topology of PBCs is such that a particle leaving one side of the unit cell, it reappears on the other side.
-A 2D map with PBC could be perfectly mapped to a torus.
+Periodic boundary conditions (PBCs) allow the approximation of an infinite
+system by simulating only a small part, a unit-cell. The most common shapes of
+(3D) unit-cell is cuboidal, but any shape that completely tessellates 3D space
+can be used. The topology of PBCs is such that a particle leaving one side of
+the unit cell, it reappears on the other side. A 2D map with PBC could be
+perfectly mapped to a torus.
 
-Another key aspect of using PBCs is the use of **minimum-image convention** for calculating interactions between particles.
-This guarantees that each particle interacts only with the closest *image* of another particle, no matter with unit-cell (the original simulation box or one of the periodic images) it belongs to.
-
+Another key aspect of using PBCs is the use of the
+**minimum-image convention** for calculating interactions between particles.
+This guarantees that each particle interacts only with the closest *image* of
+another particle, no matter with unit-cell (the original simulation box or one
+of the periodic images) it belongs to.
 
 The lattice command defines a set of points in space, where `sc` is simple cubic.
 
 ```
-lattice       sc 0.60
+lattice       sc ${DENSITY}
 ```
 
-In this case, because we are working in LJ units, the number `0.60` refers to the LJ density `ρ*`.
+We have defined our density earlier using the `variable  DENSITY equal 0.8`
+command.
+
+In this case, because we are working in LJ units, the number `0.80` refers to
+the reduced LJ density `ρ*`.
 
 The region command defines a geometric region in space.
 
 ```
-region        region1 block 0 10 0 10 0 10
+region        box block 0 10 0 10 0 10
 ```
 
-The arguments are `region1`, a name we give to the region, `block`, the type of region (cuboid), and the numbers are the low and high values for x, y, and z.
+The arguments are `box`, a name we give to the region, `block`, the type of
+region (cuboid), and the numbers are the min and max values for x, y, and z.
 
 We then create a box with one atom type, using the region we defined previously
 
@@ -133,16 +160,7 @@ In this case, Lennard-Jones interactions, cut at 3.5 Å.
 Cutting the interactions at a certain distance (as opposed to calculating interactions up to an 'infinite' distance, drastically reduces the computation time.
 This approximation is only valid because the LJ potential is asymptotic to zero at high *d* distance between particles.
 
-[comment]: # (side by side?)
-<div class="row" style="display: flex; align-items: center;">
-  <div class="col-md-6" markdown="1">
-  {% include figure.html url="" max-width="100%" file="/fig/2_MD-primer/dist.png" alt="Distance between particles" %}
-  </div>
-
-  <div class="col-md-6" markdown="1">
-  {% include figure.html url="" max-width="100%" file="/fig/2_MD-primer/lj_potential.png" alt="Lennard-Jones potential" %}
-  </div>
-</div>
+{% include figure.html url="" max-width="60%" file="/fig/2_MD-primer/lj_potential_new.png" alt="Lattice" %}
 
 To make sure there is no discontinuity at the cutoff point, we can shift the potential.
 This subtracts the value of the potential at the cutoff point (which should be very low) from the entire function, making the energy at the cutoff equal to zero.

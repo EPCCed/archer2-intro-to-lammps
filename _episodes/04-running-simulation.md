@@ -14,17 +14,20 @@ keypoints:
 
 ## Log file
 
-The logfile is where we can find thermodynamic information of interest.
-By default, the log file name that LAMMPS creates, and which to it writes all the info that shows on the terminal, is `log.lammps`.
-To change that, we could use the command:
+The logfile is where we can find thermodynamic information of interest. By
+default, LAMMPS will write to a file called `log.lammps`. All info output to
+the terminal is replicated in this file. We can change the name of the
+logfile by adding a `log` command to your script:
 
 ```
 log     new_file_name.extension
 ```
 
-We can change which file to write to multiple times during a simulation, and even `append` to a file, for example, if we want the thermodynamic data separate from the logging of other assorted commands.
-The thermodynamic data, which we setup with the `thermo` and `thermo_style` command, create the following (truncated) output:
-
+We can change which file to write to multiple times during a simulation, and
+even `append` to a file if, for example, we want the thermodynamic data
+separate from the logging of other assorted commands. The thermodynamic data,
+which we setup with the `thermo` and `thermo_style` command, create the
+following (truncated) output:
 
 ```
     Step         Temp       TotEng       PotEng       KinEng        Press       Volume      Density
@@ -35,9 +38,13 @@ The thermodynamic data, which we setup with the `thermo` and `thermo_style` comm
     2000   0.93942595   -2.5817381   -3.9894679    1.4077298  -0.31689463    1666.6667          0.6
 ```
 
-At the start, we get a header with the column names, and then a line for each time-step that's a multiple of the value we set `thermo` to.
-In this example, because we're running an NVT simulation, both the simulation box volume, and the particle density are constant, but using other ensembles that would change.
-At the end of each `run` command, we get the analysis of how the simulation time is spent:
+At the start, we get a header with the column names, and then a line for each
+time-step that's a multiple of the value we set `thermo` to. In this example,
+we're running an NVT simulation, so we've fixed the number of particles, the
+volume and dimensions of the simulation box, and the temperature -- we can see
+from the logfile that `Volume` and `Density` remain constant (but not `Temp`).
+This would change if we used a different ensemble. At the end of each `run`
+command, we get the analysis of how the simulation time is spent:
 
 ```
 Loop time of 9.55046 on 64 procs for 50000 steps with 1000 atoms
@@ -69,9 +76,12 @@ Dangerous builds = 4996
 Total wall time: 0:00:09
 ```
 
-The data here presented is very important, and can help you substantially improve the speed at which your simulations run.
-The first line gives us the details of the last `run` command - how many seconds it took, on how many processes it ran on, how many time-steps, and how many atoms.
-This can be useful to compare between different systems.
+The data shown here is very important to understand the computational
+performance of our simulation, and we can it to help improve the speed at
+which our simulations run substantially. The first line gives us the
+details of the last `run` command - how many seconds it took, on how many
+processes it ran on, how many time-steps, and how many atoms. This can be
+useful to compare between different systems.
 
 Then we get some benchmark information:
 
@@ -80,10 +90,12 @@ Performance: 2261671.288 tau/day, 5235.350 timesteps/s
 99.1% CPU use with 64 MPI tasks x 1 OpenMP threads
 ```
 
-How many time units per day / how many time-steps per second.
-And how much of the available CPU resources LAMMPS was able to use, with how many MPI tasks and OpenMP threads.
+This tells us how many time units per day, and how many time-steps per second
+we are running. It also tells us how much of the available CPU resources
+LAMMPS was able to use, and how many MPI tasks and OpenMP threads.
 
-The next table shows a breakdown of the time spent on each task by the MPI library.
+The next table shows a breakdown of the time spent on each task by the MPI
+library:
 
 ```
 MPI task timing breakdown:
@@ -97,18 +109,33 @@ Modify  | 0.44529    | 0.68461    | 0.89407    |  16.2 |  7.17
 Other   |            | 0.04201    |            |       |  0.44
 ```
 
-The `Pair` line refers to non-bonded force computations, `Bond` includes all bonded interactions, including angles, dihedrals, and impropers, `Kspace` relates to long-range interactions (Ewald, PPPM or MSM), `Neigh` is the construction of neighbour lists, Comm is inter-processor communication (AKA, parallelisation overhead), `Output` is the writing of files (log and dump files), `Modify` is the fixes and computes invoked by fixes, and `Other` is everything else.
-Each category shows a breakdown of the least, average, and most amount of wall time any processor spent on each category -- large variability in this (calculated as %varavg) could show that the atom distribution between processors is not optimal.
-The final column, %total, is the percentage of the loop time spent in the category.
+There are 8 possible MPI tasks in this breakdown:
+
+ - `Pair` refers to non-bonded force computations
+ - `Bond` includes all bonded interactions, (so angles, dihedrals, and impropers)
+ - `Kspace` relates to long-range interactions (Ewald, PPPM or MSM)
+ - `Neigh` is the construction of neighbour lists
+ - `Comm` is inter-processor communication (AKA, parallelisation overhead)
+ - `Output` is the writing of files (log and dump files)
+ - `Modify` is the fixes and computes invoked by fixes
+ - `Other` is everything else
+
+Each category shows a breakdown of the least, average, and most amount of wall
+time any processor spent on each category -- large variability in this
+(calculated as `%varavg`) indicates a load imbalance (which can be caused by the
+atom distribution between processors not being optimal). The final column,
+`%total`, is the percentage of the loop time spent in the category.
 
 > ## A rule-of-thumb for %total on each category
 >   - `Pair`: as much as possible.
 >   - `Neigh`: 10% to 30%.
 >   - `Kspace`: 10% to 30%.
->   - `Comm`: as little as possible. If it's growing large, it's a clear sign that too many computational resources are being assigned to a simulation.
+>   - `Comm`: as little as possible. If it's growing large, it's a clear sign
+> that too many computational resources are being assigned to a simulation.
 {: .callout}
 
-The last line on every LAMMPS simulation will be the total wall time for the entire input script, no matter how many `run` commands it has:
+The last line on every LAMMPS simulation will be the total wall time for the
+entire input script, no matter how many `run` commands it has:
 
 ```
 Total wall time: 0:00:09

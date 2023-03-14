@@ -193,63 +193,92 @@ For this command, the file looks something like this:
 > ```
 {: .callout}
 
-### Mean-squared diplacement (MSD) and velocity autocorrelation functions (VACFs)
+### Mean-squared diplacement (MSD)
 
-We'll now look at generating mean-squared displacements (MSDs) and velocity
-autocorrelation functions (VACFs) using LAMMPS. Both of these are averaged
-quantitiesm and we will calculate these using a `compute` command, and call
-this command with a `fix ave/correlate` command.
-
-The MSD is a measure of the average displacement that particles travel from
-their origin position at some given time. The slope of the RDF is directly
-proportional to the diffusion coefficient of the system.
+The mean-squared displacement (MSD) is a measure of the average displacement
+that particles travel from their origin position at some given time. The slope
+of the RDF is directly proportional to the diffusion coefficient of the
+system. As with the RDF, we will require a `compute` command and a `fix` command
+to call that `compute`:
 
 ```
 compute        MSD all msd
-fix            MSD_OUTPUT all ave/correlate 1 5000 5000 c_MSD[*] file msd_lj.out ave running
+fix            MSD_OUTPUT all ave/correlate 1 50000 50000 c_MSD[4] file msd_lj.out ave running
 ```
 
-[comment]: # (never done MSD or time correlations, this needs some more explaining)
-The `fix` is then taking a sample every time-step, and at time-steps divisible
-by 5000 it calculates the time correlation and writes it down to file (so, we
-get two values, at the start of the run, and end of the run).
+As before, the `compute` command has a name (MSD), a group to which it applies
+(all), and a type (msd).
 
-And the final example is a velocity auto-correlation function
+We're using `fix ave/correlate` command to calculate how the total unwrapped
+squared displacement of every particle in the system changes throughout the
+simulation. This works in a very similar way to the `fix ave/time` command
+that we used before. For this, we define the following parameters:
+  - The fix name (`MSD_OUTPUT`).
+  - The group of particles to which this applies (all particles).
+  - The type of fix (`ave/correlate`).
+  - The `Nevery`, `Nrepeat`, and `Nfreq` values -- here, we want to calculate
+    the correlation every timestep throughout the simulation.
+  - The `compute` command that's being averaged (as before, we use `c_` to
+    define that we need a `compute`, and give the ID of the `compute` command).
+  - The ouput type and name (`file msd_lj.out`).
+  - The style of correlation being used -- here, we're taking a running average
+    of the MSD.
 
-```
-compute        VACF all vacf
-fix            VACF_OUTPUT all ave/correlate 1 2500 5000 c_VACF[*] file vacf_lj.out ave running
-```
-
-[comment]: # (ditto from what I said about MSD)
-Here the fix is taking 2500 samples from time-step 2501 to 5000.
-
-The `dump` command allows to write trajectory files -- files that have the
-coordinates (and sometimes other properties) of each particle at a regular
-interval. These are important to create visual representations of the
-evolution of the simulation (AKA molecular movies) or to allow for the
-calculation of properties after the simulation is done, without the need to
-re-run the simulation.
-
-```
-dump           2 all custom 1000 positions.lammpstrj id x y z vx vy vz
-dump_modify    2 sort id
-```
-
-The `dump` command has id `2`, and will output information for `all` particles.
-The style is `custom`, and will write to file `positions.lammpstrj` every
-`1000` time-steps. The `custom` style is configurable, and we request that
-each atom has the following properties written to file: atom `id`, positions
-in the 3 directions, and velocity magnitudes in the 3 directions. The
-`dump_modify` command makes sure that the atoms are written in order of `id`,
-rather than in whatever order they happen to get calculated.
-
-Finally, we tell LAMMPS to run this section (with the computes and fixes) for
-`5000` time-steps.
+Confusingly, if we set this command to run for the entire simulation, LAMMPS
+will output the MSD at the start of the simulation (when particles have not
+moved at all, and the MSD will be 0) and once more at the end of the
+simulation. As a result, the start of the output `msd_lj.out` file is not very
+informative:
 
 ```
-run            5000
+# Time-correlated data for fix MSD_OUTPUT
+# Timestep Number-of-time-windows
+# Index TimeDelta Ncount c_MSD[4]*c_MSD[4]
+0 50000
+1 0 1 0
+2 1 0 0.0
+3 2 0 0.0
+4 3 0 0.0
+5 4 0 0.0
+6 5 0 0.0
+7 6 0 0.0
+8 7 0 0.0
+9 8 0 0.0
+10 9 0 0.0
+...
 ```
+
+Additionally, we're only interested in the final part of the `msd_lj.out` file.
+To get the output we're interested in, we'll run:
+
+```bash
+tail -n 50000 msd_lj.out > msd_end.out
+```
+
+Then, we can plot the final output MSD using e.g. `gnuplot`:
+  - The first column tells you which timestep this was output for.
+  - The second column is the amount of simulation time since the simulation
+    start (for a Lennard-Jones system, these are the same as time-steps).
+  - The third column tells you how many times this value was averaged over.
+  - The fourth column tells you the mean squared displacement for your system.
+
+> ## Outputting a velocity autocorrelation function (optional)
+>
+> It's possible to use a similar approach to calculate the velocity
+> autocorrelation function of a system. Try to use the `compute vacf` and
+> `fix ave/correlate` commands to output the velocity autocorrelation function.
+>
+> > ## Solution
+> >
+> > You should be able to get a VACF with:
+> > ```
+> > compute        VACF all vacf
+> > fix            VACF_OUTPUT all ave/correlate 1 25000 50000 c_VACF[*] file vacf_lj.out ave running
+> > ```
+> >
+> {: .solution}
+{: .challenge}
+
 
 ### Restart files
 

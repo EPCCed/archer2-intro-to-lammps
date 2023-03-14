@@ -25,5 +25,6 @@ module load lammps/23_Jun_2022
 export OMP_NUM_THREADS=1
 
 # Launch the parallel job
-srun lmp -i in.lj_start -l log.start.$SLURM_JOB_ID
-srun lmp -i in.lj_rerun -l log.rerun.$SLURM_JOB_ID
+srun lmp -i in.lj_exercise -l log.start.$SLURM_JOB_ID
+#srun lmp -i in.lj_start -l log.start.$SLURM_JOB_ID
+#srun lmp -i in.lj_rerun -l log.rerun.$SLURM_JOB_ID

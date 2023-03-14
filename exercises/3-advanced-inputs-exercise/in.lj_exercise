@@ -93,4 +93,4 @@ run_style     verlet
 
 run           50000
 
-write_restart  restart2.lj.equil
+write_restart  restart.lj.equil

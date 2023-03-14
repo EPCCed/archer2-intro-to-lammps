@@ -1,33 +1,35 @@
-# reads units/atom/pair_style/etc information
-read_restart     restart2.lj.equil
+#################################
+# 1) Read restart file
+#################################
 
-# Variable information is not saved on restart files
-variable        DENSITY equal 0.8
+read_restart restart.lj.equil
 
-# Nor is Neighbor information
-neighbor        0.3 bin
-neigh_modify    delay 10 every 1
+#################################
+# 2) Define simulation parameters
+#################################
 
-# or fixes
-fix             1 all nvt temp 1.00 1.00 5.0
+fix   LinMom all momentum 50 linear 1 1 1 angular
+fix    1 all npt temp 1.0 1.0 25.0 iso 1.5150 1.5150  10.0
 
-compute         RDF all rdf 150 cutoff 3.5
-fix             RDF_OUTPUT all ave/time 50 950 50000 c_RDF[*] file rdf_lj_${DENSITY}.out mode vector
+####################################
+# 3) Final setup
+#   - Define starting particle velocity
+#   - Define timestep
+#   - Define output system properties (temp, energy, etc.)
+#   - Define simulation length
+####################################
 
-compute         MSD all msd
-fix             MSD_OUTPUT all ave/correlate 1 50000 50000 c_MSD[4] file msd_lj.out ave running
+timestep      0.005
 
-# or any of the output methods
-thermo_style    custom step temp etotal pe ke press vol density
-thermo          500
+thermo_style  custom step temp etotal pe ke press vol density
+thermo        500
 
-dump            1 all custom 100 nvt.lammpstrj id type x y z vx vy vz
-dump_modify     1 sort id
+dump          1 all custom 100 npt.lammpstrj id type x y z vx vy vz
+dump_modify   1 sort id
 
-# reset timestep
-reset_timestep  0
-run_style       verlet
+compute       MSD all msd
+fix           MSD_OUTPUT all ave/correlate 1 50000 50000 c_MSD[4] file msd_lj.out ave running
 
-run             50000
+run_style     verlet
 
-write_restart   restart3.lj.equil
+run           50000

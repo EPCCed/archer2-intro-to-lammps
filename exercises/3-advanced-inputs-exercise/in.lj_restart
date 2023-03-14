@@ -1,0 +1,33 @@
+# reads units/atom/pair_style/etc information
+read_restart     restart2.lj.equil
+
+# Variable information is not saved on restart files
+variable        DENSITY equal 0.8
+
+# Nor is Neighbor information
+neighbor        0.3 bin
+neigh_modify    delay 10 every 1
+
+# or fixes
+fix             1 all nvt temp 1.00 1.00 5.0
+
+compute         RDF all rdf 150 cutoff 3.5
+fix             RDF_OUTPUT all ave/time 50 950 50000 c_RDF[*] file rdf_lj_${DENSITY}.out mode vector
+
+compute         MSD all msd
+fix             MSD_OUTPUT all ave/correlate 1 50000 50000 c_MSD[4] file msd_lj.out ave running
+
+# or any of the output methods
+thermo_style    custom step temp etotal pe ke press vol density
+thermo          500
+
+dump            1 all custom 100 nvt.lammpstrj id type x y z vx vy vz
+dump_modify     1 sort id
+
+# reset timestep
+reset_timestep  0
+run_style       verlet
+
+run             50000
+
+write_restart   restart3.lj.equil

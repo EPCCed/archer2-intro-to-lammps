@@ -271,6 +271,7 @@ Then, we can plot the final output MSD using e.g. `gnuplot`:
 > > ## Solution
 > >
 > > You should be able to get a VACF with:
+> >
 > > ```
 > > compute        VACF all vacf
 > > fix            VACF_OUTPUT all ave/correlate 1 25000 50000 c_VACF[*] file vacf_lj.out ave running

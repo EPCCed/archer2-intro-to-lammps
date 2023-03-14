@@ -159,8 +159,17 @@ For this command, the file looks something like this:
 > ## RDFs at different densities
 >
 > How does the RDF change as you vary the system density? We've been running
-> with a
+> with a density of 0.8. How does the RDF change if we increase the density to
+> 1.2? And if we reduce it to 0.1?
 >
+> > ## Solution
+> >
+> > At a reduced temperature of T* = 1.0, a Lennard-Jones system with a reduced
+> > density ρ* = 0.8 is in liquid state. At ρ* = 1.2, the system is in solid
+> > state, and at ρ* = 0.0025, the system is a gas. The RDFs are different for
+> > each of these phases.
+> >
+> {: .solution}
 {: .challenge}
 
 > ## YAML output

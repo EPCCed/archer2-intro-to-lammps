@@ -22,6 +22,70 @@ is handled by a [fix command](https://docs.lammps.org/fixes.html). We will now
 look at three examples, but there are (at the time of writing) over 150
 different `compute` commands with many options each.
 
+### LAMMPS trajectory files
+
+We can output information about a group of particles in our system by using
+the LAMMPS `dump` command. In this example, we will be outputting the particle
+positions, but you can output many other attributes, such as particle
+velocities, types, angular momentum, etc. The list of attributes (and examples
+of `dump` commands) can be found in the
+[relevant LAMMPS manual page](https://docs.lammps.org/dump.html).
+
+If we look at the starting input script in
+`exercises/3-advanced-inputs-exercise/in.lj_start`, we find that the following
+command has been added:
+
+```bash
+dump            1 all custom 100 nvt.lammpstrj id type x y z vx vy vz
+dump_modify     1 sort id
+```
+
+The `dump` command defines the properties that we want to output, and how
+frequently we want these output. In this case, we have set the ID of the
+`dump` command to `1` (we could have used any name/number and it would still
+work). We want to output properties for `all` particles in our system. We've
+set the output type to `custom` to have better control of what's being output
+-- there are default `dump` options but `custom` is generally the one that
+gets used. We'll be outputting every `100` time-steps to a file called
+`nvt.lammpstrj` -- a `*.lammpstrj` file can be recognised by some
+post-processing and post-analysis tools as a LAMMPS trajectory/dump file, and
+can save some time down the line. Finally, we name the properties we want to
+output -- in this case, we want to output the particle ID, type, (x,y,z)
+components of position, and the (x, y, z) components of velocity.
+
+We've added a `dump_modify` command to get LAMMPS to sort the output by ID
+order -- we tell the `dump_modify` command which `dump` command we'd like to
+sort by giving the dump-ID (in this case, our `dump` command had an ID of `1`).
+We then specify how we want to modify this `dump` command -- we want to `sort`
+it by ID, but there are many more options (that you can find in the
+[LAMMPS manual](https://docs.lammps.org/dump_modify.html)).
+
+The output `nvt.lammpstrj` file looks like this:
+
+```
+ITEM: TIMESTEP
+100000
+ITEM: NUMBER OF ATOMS
+8000
+ITEM: BOX BOUNDS pp pp pp
+0.0000000000000000e+00 4.3088693800637678e+01
+0.0000000000000000e+00 4.3088693800637678e+01
+0.0000000000000000e+00 4.3088693800637678e+01
+ITEM: ATOMS id type x y z vx vy vz
+1 1 37.8488 34.4941 42.367 -0.288953 -0.71502 -0.690526
+2 1 8.70692 28.34 10.3539 -1.23763 -0.708975 -1.07684
+3 1 14.2888 33.2234 10.3076 -0.717269 0.696605 0.669823
+4 1 2.31473 26.109 36.5071 -1.93238 -1.09695 1.34787
+5 1 42.0214 26.0015 20.3317 -0.767786 0.693569 -0.0684248
+6 1 7.36511 39.4736 37.7819 0.011605 0.376106 -0.680507
+```
+
+The lines with `ITEM:` let you know what is output on the next lines (so
+`ITEM: TIMESTEP` lets you know that the next line will tell you the time-step
+for this frame -- in this case, 100,000). A LAMMPS trajectory file will
+usually contain the time-step, number of atoms, and information on box bounds
+before outputting the information we'd requested.
+
 ### Radial distribution functions (RDFs)
 
 First, we will look at the Radial Distribution Function (RDF), _g_(_r_). This
@@ -91,6 +155,13 @@ For this command, the file looks something like this:
 6 0.128333 0 0
 ...
 ```
+
+> ## RDFs at different densities
+>
+> How does the RDF change as you vary the system density? We've been running
+> with a
+>
+{: .challenge}
 
 > ## YAML output
 >

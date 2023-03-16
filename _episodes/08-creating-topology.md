@@ -74,7 +74,9 @@ The extra angstrom around the limits allows the later application of periodic bo
 > ## Tip
 >
 > To solvate large molecules/particles (for example, polymers), it is considerably faster to do multi-stop packing, with different input files, one per molecule type, and using the `fixed` constraint for the topology with the already packed molecules.
+>
 > Example:
+>
 > ```
 > tolerance 2.0
 > output polymers_with_water.xyz
@@ -96,13 +98,13 @@ The extra angstrom around the limits allows the later application of periodic bo
 > 
 > > ## Solution
 > > 
-> >```
+> > ```
 > > 3
 > > Water molecule
 > > WO          0.00000        0.00000        0.11779
 > > WH          0.00000        0.75545       -0.47116
 > > WH          0.00000       -0.75545       -0.47116
-> >```
+> > ```
 > > 
 > {: .solution}
 {: .challenge}
@@ -115,7 +117,7 @@ The extra angstrom around the limits allows the later application of periodic bo
 > 
 > > ## Solution
 > > 
-> >```
+> > ```
 > > 9
 > > Ethanol
 > >   EHC      1.8853     -0.0401      1.0854
@@ -127,7 +129,34 @@ The extra angstrom around the limits allows the later application of periodic bo
 > >   EHA     -0.4235      0.9513      1.1064
 > >   EOH     -0.9394      0.0157     -0.6674
 > >   EHO     -1.8540      0.0626     -0.4252
-> >```
+> > ```
+> > 
+> {: .solution}
+{: .challenge}
+
+
+
+> ## pack.inp
+>
+> The PACKMOL input script
+> 
+> > ## Solution
+> > 
+> > ```
+> > tolerance 2.0
+> > output 5364_H2O_1048_eth.xyz
+> > filetype xyz
+> > 
+> > structure h2o.xyz
+> >   number 5364
+> >   inside box 1.0 1.0 81.0 79. 79. 159.
+> > end structure
+> > 
+> > structure c2h5oh.xyz
+> >   number 1048
+> >   inside box 1.0 1.0 81.0 79. 79. 159.
+> > end structure
+> > ```
 > > 
 > {: .solution}
 {: .challenge}

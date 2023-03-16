@@ -144,17 +144,19 @@ The extra angstrom around the limits allows the later application of periodic bo
 > > 
 > > ```
 > > tolerance 2.0
-> > output 5364_H2O_1048_eth.xyz
+> >
+> > output water_ethanol.xyz
 > > filetype xyz
-> > 
-> > structure h2o.xyz
-> >   number 5364
-> >   inside box 1.0 1.0 81.0 79. 79. 159.
+> >
+> > structure water.xyz
+> >   number 2000
+> >   inside cube 15. 15. 30. 50.
 > > end structure
-> > 
-> > structure c2h5oh.xyz
-> >   number 1048
-> >   inside box 1.0 1.0 81.0 79. 79. 159.
+> >
+> > structure ethanol.xyz
+> >   number 2000
+> >   inside box 1. 1. 1. 79. 79. 109.
+> >   outside cube 15. 15. 30. 50.
 > > end structure
 > > ```
 > > 

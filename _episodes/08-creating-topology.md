@@ -110,7 +110,7 @@ In the next section, we will use **VMD** to automatically create the bonds, angl
 >
 > The topology file for water.
 > 
-> > ## Solution
+> > ## Expand for full file
 > > 
 > > ```
 > > 3
@@ -129,7 +129,7 @@ In the next section, we will use **VMD** to automatically create the bonds, angl
 >
 > The topology file for ethanol.
 > 
-> > ## Solution
+> > ## Expand for full file
 > > 
 > > ```
 > > 9
@@ -153,7 +153,7 @@ In the next section, we will use **VMD** to automatically create the bonds, angl
 >
 > The PACKMOL input script
 > 
-> > ## Solution
+> > ## Expand for full file
 > > 
 > > ```
 > > tolerance 2.0
@@ -296,7 +296,7 @@ topo writelammpsdata data.water_ethanol
 >
 > The `tcl` file for the ethanol molecule.
 > 
-> > ## Solution
+> > ## Expand for full file
 > > 
 > > ```
 > > set selECH [atomselect top {name ECH}]
@@ -349,7 +349,7 @@ topo writelammpsdata data.water_ethanol
 >
 > The `tcl` file for the water molecule.
 > 
-> > ## Solution
+> > ## Expand for full file
 > > 
 > > ```
 > > set selwo [atomselect top {name WO}]
@@ -375,7 +375,7 @@ topo writelammpsdata data.water_ethanol
 >
 > The `tcl` file that generates the bond/angle/dihedral information and writes the LAMMPS datafile.
 > 
-> > ## Solution
+> > ## Expand for full file
 > > 
 > > ```
 > > package require topotools

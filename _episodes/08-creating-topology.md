@@ -4,6 +4,8 @@ teaching: 30
 exercises: 0
 questions:
 - "How do I create a topology file for my system?"
+objectives:
+- "Create a topology file"
 ---
 
 
@@ -49,11 +51,13 @@ structure water.xyz
 end structure
 ```
 
-
-
 The first line starts the `structure` section, and selects which file to read the molecule from, in this case `water.xyz`.
 Then `number` selects how many molecules the final system will have.
 The next line, the contraint, selects how the molecules will be arranged in the final system, in this case, on a cube, with side `50` angstrom, and with origin at (15, 15, 30).
+
+This results in 
+
+{% include figure.html url="" max-width="60%" file="/fig/08-create-topology/water.gif" alt="Cube of water molecules." %}
 
 There are several types of constraints available: `fixed`, `constrain rotations`, combinations of `inside`/`outside` with `cube`/`box`/`sphere`/`ellipsoid`/`cylinder`, as well as combinations of `above`/`below` with `plane`/`xgauss`.
 Descriptions of all of these types can be found in [the manual](https://m3g.github.io/packmol/userguide.shtml#types).
@@ -68,7 +72,7 @@ structure ethanol.xyz
 end structure
 ```
 
-The extra angstrom around the limits allows the later application of periodic boundary conditions without creating bonds between atoms of different molecules.
+The extra angstrom around the outermost limits allows the later application of periodic boundary conditions without creating bonds between atoms of different molecules.
 
 
 > ## Tip
@@ -162,3 +166,10 @@ The extra angstrom around the limits allows the later application of periodic bo
 > > 
 > {: .solution}
 {: .challenge}
+
+
+## Converting a .xyz file to a LAMMPS data file with VMD
+
+To do this, you will need access to a VMD
+
+{% include links.md %}

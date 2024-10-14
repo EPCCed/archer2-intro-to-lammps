@@ -80,9 +80,6 @@ timestep      0.005
 thermo_style  custom step temp etotal pe ke press vol density
 thermo        500
 
-compute       RDF all rdf 150 cutoff 3.5
-fix           RDF_OUTPUT all ave/time 50 950 50000 c_RDF[*] file rdf_lj_${DENSITY}.out mode vector
-
 run_style     verlet
 
 run           50000

@@ -229,7 +229,8 @@ Total wall time: 0:00:13
 ```
 
 The ultimate aim is always to get your simulation to run in a sensible amount of time.
-This often simply means trying to optimise the final value ("Total wall time"), though some people care more about optimising efficiency (wall time multiplied by core count).
+This often simply means trying to optimise the final value ("Total wall time"),
+though some people care more about optimising efficiency (wall time multiplied by core count).
 
 ## Increasing computational resources
 

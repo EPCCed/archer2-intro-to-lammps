@@ -411,4 +411,3 @@ topo writelammpsdata data.water_ethanol
 {: .challenge}
 
 {% include links.md %}
-

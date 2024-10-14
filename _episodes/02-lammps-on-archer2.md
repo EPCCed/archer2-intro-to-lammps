@@ -15,8 +15,6 @@ keypoints:
 - "Adding more cores is not always the most effective way of increasing performance."
 ---
 
-# Test
-
 ## ARCHER2 system overview
 
 ### Architecture
@@ -35,7 +33,8 @@ All non-GPU nodes are dual socket nodes so there are 128 cores per node.
 
 ### Compute nodes
 
-There are 5,860 compute nodes in total, giving 750,080 compute cores on the full ARCHER2 system.
+There are 5,860 CPU compute nodes in total, giving 750,080 compute cores on the full ARCHER2 system.
+There are also 4 GPU nodes for software development.
 Most of these (5,276 nodes) have 256 GiB memory per node, a smaller number (584 nodes) have 512 GiB memory per node.
 All of the compute nodes are linked together using the high-performance HPE Slingshot interconnect.
 
@@ -57,10 +56,10 @@ Compute node summary:
 
 There are four different storage systems available on the current ARCHER2 service:
 
-* Home file systems
-* Work file systems
-* Solid-state file system (scratch)
-* RDF as a Service (RDFaaS)
+* Home file systems: `/home`
+* Work file systems: `/work`
+* Solid-state file system (scratch): `/scratch-nvme`
+* RDF as a Service (RDFaaS): `/epsrc`
 
 ## What is LAMMPS?
 
@@ -122,24 +121,36 @@ We will now launch a first LAMMPS job from the compute nodes.
 The login nodes are shared resources on which we have limited the amount of cores that can be used for a job.
 To run LAMMPS simulations on a large number of cores, we must use the compute nodes.
 
-The `\home` filesystem is not accessible from the compute nodes.
-As such, we will need to submit our jobs from the `\work` directory.
-Every user has a directory in `\work` associated to their project code.
-For this course, the project code is `ta100`, so we all have a directory called:
-`/work/ta100/ta100/<username>` (make sure to replace `username` with your username).
+The `/home` file system is not accessible from the compute nodes.
+As such, we will need to submit our jobs from the `/work` directory.
+Every user has a directory in `/work` associated to their project code.
+For this course, the project code is `ta176`, so we all have a directory called:
+`/work/ta176/ta176/<username>` (make sure to replace `username` with your username).
 
 We have prepared a number of exercises for today.
-You can either download these by running:
+You can either download these by either:
+
+### Using `git`
 
 ```bash
-svn checkout https://github.com/EPCCed/archer2-intro-to-lammps/trunk/exercises
+git clone https://github.com/EPCCed/archer2-intro-to-lammps
 ```
 
-or by copying it from the shared part of the `ta100` project directory:
+and then navigating to the `exercises folder` with:
 
 ```bash
-cp -r /work/ta100/shared/exercises ./
+cd archer2-intro-to-lammps/exercises
 ```
+
+### Copy from `/work/ta176/shared`
+
+or by copying it from the shared part of the `ta176` project directory:
+
+```bash
+cp -r /work/ta176/shared/exercises ./
+```
+
+### Exercise 1
 
 For this session, we'll be looking at `exercises/1-performance-exercise/`.
 
@@ -151,7 +162,7 @@ In this directory you will find three files:
   - `in.ethanol` is the LAMMPS input script that we will be using for this exercise.
     This script will run a small simulation of 125 ethanol molecules.
   - `data.ethanol` is a LAMMPS data file for a single ethanol molecule.
-    This single molecule will be copied by LAMMPS to generate our simulation box.
+    This single molecule will be replicated by LAMMPS to generate the system inside the simulation box.
 
 > ## Why ethanol?
 >
@@ -167,13 +178,14 @@ You can submit your first job on ARCHER2 by running:
 sbatch sub.slurm
 ```
 
-You can check the progress of your job by running `squeue -u ${USER}`.
+You can check the progress of your job by running `squeue --me`.
 Your job state will go from `PD` (pending) to `R` (running) to `CG` (cancelling).
 Once your job is complete, it will have produced a file called `slurm-####.out`, which contains the standard output and standard error produced by your job.
 
 ## A brief overview of the LAMMPS log file
 
-The job will also produce a LAMMPS log file `log.out`.
+The job will also produce a LAMMPS log file `log.64_cpus`.
+The name of the file will change when the number of tasks requested in slurm are changed in the `sub.slurm` file.
 In this file, you will find all of the thermodynamic outputs that were specified in the LAMMPS `thermo_style`, as well as some very useful performance information!
 We will explore the LAMMPS log file in more details later but, for now, we will concentrate on the LAMMPS performance information output at the end of the log file.
 This will help us to understand what our simulation is doing, and where we can speed it up.
@@ -181,43 +193,43 @@ This will help us to understand what our simulation is doing, and where we can s
 Running:
 
 ```bash
-tail -n 27 log.lammps
+tail -n 27 log.64_cpus
 ```
 
 will output the following:
 
 ```
-100.0% CPU use with 1 MPI tasks x 1 OpenMP threads
+100.0% CPU use with 64 MPI tasks x 1 OpenMP threads
 
 MPI task timing breakdown:
 Section |  min time  |  avg time  |  max time  |%varavg| %total
 ---------------------------------------------------------------
-Pair    | 16.433     | 16.433     | 16.433     |   0.0 | 32.67
-Bond    | 2.2103     | 2.2103     | 2.2103     |   0.0 |  4.39
-Kspace  | 2.4733     | 2.4733     | 2.4733     |   0.0 |  4.92
-Neigh   | 28.84      | 28.84      | 28.84      |   0.0 | 57.33
-Comm    | 0.21298    | 0.21298    | 0.21298    |   0.0 |  0.42
-Output  | 0.0039677  | 0.0039677  | 0.0039677  |   0.0 |  0.01
-Modify  | 0.090959   | 0.090959   | 0.090959   |   0.0 |  0.18
-Other   |            | 0.03871    |            |       |  0.08
+Pair    | 0.00020468 | 0.30021    | 2.1814     | 117.6 |  4.44
+Bond    | 0.00014519 | 0.044983   | 0.2835     |  39.4 |  0.67
+Kspace  | 0.43959    | 2.4307     | 2.7524     |  43.8 | 35.98
+Neigh   | 3.608      | 3.6659     | 3.7229     |   1.9 | 54.27
+Comm    | 0.091376   | 0.26108    | 0.34751    |  12.6 |  3.87
+Output  | 0.0028102  | 0.0029118  | 0.003015   |   0.1 |  0.04
+Modify  | 0.011717   | 0.045059   | 0.19911    |  23.7 |  0.67
+Other   |            | 0.004113   |            |       |  0.06
 
-Nlocal:           6561 ave        6561 max        6561 min
-Histogram: 1 0 0 0 0 0 0 0 0 0
-Nghost:           8301 ave        8301 max        8301 min
-Histogram: 1 0 0 0 0 0 0 0 0 0
-Neighs:    1.13645e+06 ave 1.13645e+06 max 1.13645e+06 min
-Histogram: 1 0 0 0 0 0 0 0 0 0
+Nlocal:        102.516 ave         650 max           0 min
+Histogram: 44 12 0 0 0 0 0 1 1 6
+Nghost:        922.078 ave        2505 max         171 min
+Histogram: 8 24 0 7 17 0 0 0 2 6
+Neighs:        18165.4 ave      136714 max           0 min
+Histogram: 54 2 0 0 0 0 0 1 2 5
 
-Total # of neighbors = 1136450
-Ave neighs/atom = 173.21292
+Total # of neighbors = 1162584
+Ave neighs/atom = 177.19616
 Ave special neighs/atom = 7.3333333
 Neighbor list builds = 1000
 Dangerous builds not checked
-Total wall time: 0:01:41
+Total wall time: 0:00:13
 ```
+
 The ultimate aim is always to get your simulation to run in a sensible amount of time.
 This often simply means trying to optimise the final value ("Total wall time"), though some people care more about optimising efficiency (wall time multiplied by core count).
-In this lesson, we will be focusing on what we can do to improve these.
 
 ## Increasing computational resources
 
@@ -225,15 +237,13 @@ The first approach that most people take to increase the speed of their simulati
 If your system can accommodate this, doing this can sometimes lead to "easy" improvements.
 However, this usually comes at an increased cost (if running on a system for which compute is charged) and does not always lead to the desired results.
 
-In your first run, LAMMPS was run on a single core.
+In your first run, LAMMPS was run on 64 cores.
 For a large enough system, increasing the number of cores used should reduce the total run time.
-In your `sub.slurm` file, you can edit the `-n #` in the line:
+In your `sub.slurm` file, you can edit the number of tasks in the line:
 
-[comment]: # (does this command still need the --exact flag?)
 ```bash
-srun --exact -n 1 lmp -i in.ethanol -l log.out
+#SBATCH --tasks-per-node=64
 ```
-
 to run on more cores.
 An ARCHER2 node has 128 cores, so you could potential run on up to 128 cores.
 
@@ -242,16 +252,16 @@ An ARCHER2 node has 128 cores, so you could potential run on up to 128 cores.
 >
 > As a first exercise, fill in the table below.
 >
->  | Number of cores | Walltime | Performance (ns/day) |   |
->  | -------------   | -------- | -------------------- |   |
->  | 1               |          |                      |   |
->  | 2               |          |                      |   |
->  | 4               |          |                      |   |
->  | 8               |          |                      |   |
->  | 16              |          |                      |   |
->  | 32              |          |                      |   |
->  | 64              |          |                      |   |
->  | 128             |          |                      |   |
+>  | Number of cores | Wall time | Performance (ns/day) |
+>  | --------------- | --------- | -------------------- |
+>  | 1               |           |                      |
+>  | 2               |           |                      |
+>  | 4               |           |                      |
+>  | 8               |           |                      |
+>  | 16              |           |                      |
+>  | 32              |           |                      |
+>  | 64              |           |                      |
+>  | 128             |           |                      |
 >
 > Do you spot anything unusual in these run times?
 > If so, can you explain this strange result?
@@ -260,13 +270,14 @@ An ARCHER2 node has 128 cores, so you could potential run on up to 128 cores.
 > >
 > > The simulation takes almost the same amount of time when running on a single core as when running on two cores.
 > > A more detailed look into the `in.ethanol` file will reveal that this is because the simulation box is not uniformly packed.
+> > We won't go into all the details in this course, but we do cover most of the available optimisations in the advanced course.
 > >
 > {: .solution}
 {: .challenge}
 
 > ## Note
-> Here are only considering MPI parallelisation.
-> LAMMPS offers the option to run using joint MPI+OpenMP (more on that later),
+> Here we are only considering MPI parallelisation.
+> LAMMPS offers the option to run using joint MPI+OpenMP (more on that on the advanced course),
 > but for the exercises in this lesson, we will only be considering MPI.
 {: .callout}
 

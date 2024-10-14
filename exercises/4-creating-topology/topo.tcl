@@ -1,5 +1,7 @@
 package require topotools
-proc get_total_charge  { eval "vecadd [[atomselect $molid all] get charge]" }
+proc get_total_charge {{molid top}} {
+  eval "vecadd [[atomselect $molid all] get charge]"
+}
 mol bondsrecalc all
 topo retypebonds
 topo guessangles

@@ -25,4 +25,4 @@ module load lammps
 export OMP_NUM_THREADS=1
 
 # Launch the parallel job
-srun lmp -i in.ethanol -l ${SLURM_NPROCS}_cpus.log.${SLURM_JOB_ID}
+srun lmp -i in.ethanol -l log.${SLURM_NPROCS}_cpus

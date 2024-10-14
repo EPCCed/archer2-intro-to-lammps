@@ -6,7 +6,7 @@
 #SBATCH --time=0:20:0
 #SBATCH --hint=nomultithread
 #SBATCH --distribution=block:block
-#SBATCH --tasks-per-node=1
+#SBATCH --tasks-per-node=128
 #SBATCH --cpus-per-task=1
 
 # The budget code of the project

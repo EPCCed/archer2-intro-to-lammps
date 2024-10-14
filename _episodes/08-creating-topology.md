@@ -50,7 +50,7 @@ In this example, we will have two.
 
 ```
 structure water.xyz
-  number 2000
+  number 1300
   inside cube 15. 15. 30. 50.
 end structure
 ```
@@ -58,6 +58,12 @@ end structure
 The first line starts the `structure` section, and selects which file to read the molecule from, in this case `water.xyz`.
 Then `number` selects how many molecules the final system will have.
 The next line, the constraint, selects how the molecules will be arranged in the final system, in this case, on a cube, with side `50` angstrom, and with origin at (15, 15, 30).
+
+You can then run the script using the `packmol command` as so:
+
+```bash
+packmol < pack.inp
+```
 
 This results in a cube of water molecules as so:
 
@@ -70,7 +76,7 @@ You can also combine constrains, for example, here we constrain the ethanol mole
 
 ```
 structure ethanol.xyz
-  number 2000
+  number 1300
   inside box 1. 1. 1. 79. 79. 109.
   outside cube 15. 15. 30. 50.
 end structure
@@ -100,7 +106,7 @@ In the next section, we will use **VMD** to automatically create the bonds, angl
 >   fixed 0. 0. 0. 0. 0. 0.
 > end structure
 > structure water.xyz
->   number 2000
+>   number 1300
 >   inside cube 1. 1. 1. 99.
 > end structure
 > ```
@@ -162,12 +168,12 @@ In the next section, we will use **VMD** to automatically create the bonds, angl
 > > filetype xyz
 > >
 > > structure water.xyz
-> >   number 2000
+> >   number 1300
 > >   inside cube 15. 15. 30. 50.
 > > end structure
 > >
 > > structure ethanol.xyz
-> >   number 2000
+> >   number 1300
 > >   inside box 1. 1. 1. 79. 79. 109.
 > >   outside cube 15. 15. 30. 50.
 > > end structure
@@ -243,7 +249,9 @@ package require topotools
 Then, there is a definition for a function that calculates the total charge of the system -- wrong charge in a LAMMPS simulation is a very common source of crashes and/or bad simulation results.
 
 ```
-proc get_total_charge {{molid top}} { eval "vecadd [[atomselect $molid all] get charge]" }
+proc get_total_charge {{molid top}} {
+  eval "vecadd [[atomselect $molid all] get charge]"
+}
 ```
 
 Now, we use the next two commands to recalculate the bonds, using the radii set in the two `.tcl` files we sources previously, and to re-name them using the scheme `atom1name-atom2name`
@@ -411,4 +419,3 @@ topo writelammpsdata data.water_ethanol
 {: .challenge}
 
 {% include links.md %}
-

@@ -10,14 +10,14 @@
 #SBATCH --cpus-per-task=1
 
 # The budget code of the project
-#SBATCH --account=ta100
+#SBATCH --account=ta176
 # Standard partition
 #SBATCH --partition=standard
 # Short QoS since our runtime is under 20m
 #SBATCH --qos=short
 
 # load the lammps module
-module load lammps/23_Jun_2022
+module load lammps/
 
 # Set the number of threads to 1
 #   This prevents any threaded system libraries from automatically
@@ -26,5 +26,5 @@ export OMP_NUM_THREADS=1
 
 # Launch the parallel job
 srun lmp -i in.lj_exercise -l log.start.$SLURM_JOB_ID
-#srun lmp -i in.lj_restart -l log.start.$SLURM_JOB_ID
+#srun lmp -i in.lj_restart -l log.restart.$SLURM_JOB_ID
 #srun lmp -i in.lj_rerun -l log.rerun.$SLURM_JOB_ID

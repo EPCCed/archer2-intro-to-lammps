@@ -1,0 +1,15 @@
+tolerance 2.0
+
+output water_ethanol.xyz
+filetype xyz
+
+structure water.xyz
+  number 2000
+  inside cube 15. 15. 30. 50.
+end structure
+
+structure ethanol.xyz
+  number 2000
+  inside box 1. 1. 1. 79. 79. 109.
+  outside cube 15. 15. 30. 50.
+end structure

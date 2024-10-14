@@ -54,6 +54,11 @@ and associate them with your account:
 
 * [Connecting to ARCHER2](https://docs.archer2.ac.uk/user-guide/connecting/)
 
+## MFA/TOTP
+
+Multi-factor authentication, under the form of timed one-time passwords, are now mandatory on ARCHER2 accounts.
+To create one, please follow the instructions in our [SAFE documentation](https://docs.archer2.ac.uk/user-guide/connecting/#mfa-time-based-one-time-passcode-totp-code).
+
 ## Data transfer services: scp, rsync, Globus Online
 
 ARCHER2 supports a number of different data transfer mechanisms. The one you choose depends

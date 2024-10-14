@@ -10,14 +10,14 @@
 #SBATCH --cpus-per-task=1
 
 # The budget code of the project
-#SBATCH --account=ta100
+#SBATCH --account=ta176
 # Standard partition
 #SBATCH --partition=standard
 # Short QoS since our runtime is under 20m
 #SBATCH --qos=short
 
 # load the lammps module
-module load lammps/23_Jun_2022
+module load lammps/
 
 # Set the number of threads to 1
 #   This prevents any threaded system libraries from automatically

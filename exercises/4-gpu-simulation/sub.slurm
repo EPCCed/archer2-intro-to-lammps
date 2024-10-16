@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Slurm job options (name, number of compute nodes, job time)
-#SBATCH --job-name=lmp_ex2
+#SBATCH --job-name=lmp_ex4
 #SBATCH --nodes=1
 #SBATCH --gpus=1
 #SBATCH --time=0:05:0

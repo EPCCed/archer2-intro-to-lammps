@@ -15,16 +15,58 @@ keypoints:
 
 ## GPU acceleration
 
-LAMMPS has the capability to use GPUs to accelerate the calculations needed to run a simulation, but the program needs to be compiled with the correct parameters for this option to be available.
+LAMMPS has the capability to use GPUs to accelerate the calculations needed to run a simulation,
+but the program needs to be compiled with the correct parameters for this option to be available.
 Furthermore, LAMMPS can exploit multiple GPUs on the same system, although the performance scaling depends heavily on the particular system.
 As always, we recommend that each user should run benchmarks for their particular use-case to ensure that they are getting performance benefits.
 While not every LAMMPS force field or fix is available for GPU, a vast majority are, and more are added with each new version.
 Check the LAMMPS documentation for GPU compatibility with a specific command.
 
-To use the GPU accelerated commands, you will need to be an extra flag when calling the LAMMPS binary: `-pk gpu <number_of_gpus_to_use>`.
+There are two main LAMMPS packages that add GPU acceleration: `GPU` and `KOKKOS`.
+The differences are many, including which `fixes` and `computes` are implemented for each package (as always, consult the manual),
+but the main difference is the underlying framework used in each.
+The flags needed for each are also different, we have some examples of each below.
+
+ARCHER2 has the `lammps-gpu` module, which has lammps compiled with KOKKOS.
+Due to the model of AMD GPUs and compiler/driver versions available, it hasn't been possible to compile LAMMPS with the `GPU` package.
+Cirrus, a Tier2 HPC system also hosted at EPCC, has a `lammps-gpu` module installed with the `GPU` package.
+
+### KOKKOS package
+
+In `exercises/4-gpu-simulation` you can find the Lennard-Jones input file used in exercise 2, with a larger number of atoms,
+and a slurm script that loads the `lammps-gpu` module, and runs the simulation on a GPU.
+
+The main differences are some of the `#SBATCH` lines, where we now have to set the number of GPUs to request, and use a different partition/qos combo:
+
+```bash
+...
+#SBATCH --nodes=1
+#SBATCH --gpus=1
+...
+#SBATCH --partition=gpu
+#SBATCH --qos=gpu-shd
+
+```
+
+and the `srun` line, where we have to set the number of tasks, CPUS, the hints, and the distribution (slurm won't allow this on the `#SBATCH` lines),
+as well as adding the `KOKKOS`-specific flags `-k on g 1 -pk kokkos -sf kk`
+
+
+```bash
+srun --ntasks=1 --cpus-per-task=1 --hint=nomultithread --distribution=block:block \
+lmp -k on g 1 -pk kokkos -sf kk -i in.lj_exercise -l log_gpu.$SLURM_JOB_ID
+```
+
+The `-k on g 1` flag tells `KOKKOS` to use 1 GPU, and `-sf kk` adds the `\kk` suffic to all styles that support it.
+
+
+### GPU package
+
+To use the GPU accelerated commands, you would need to be an extra flag when calling the LAMMPS binary: `-pk gpu <number_of_gpus_to_use>`.
 You will also need to add the `\gpu` suffix to all the styles intended to be accelerated this way or,
 alternatively, you can use the `-sf gpu` flag to append the `\gpu` suffix to all styles that support it (though this is at your own risk).
-So, for example, if ARCHER2 had GPUs, you would change the `srun` line from:
+
+For example, if you were to run exercise 4 on Cirrus, you could change the line:
 
 ```
 srun lmp -i in.ethanol -l log.$SLURM_JOB_ID

@@ -1,13 +1,16 @@
 ---
-title: "Additional software"
+title: "GPU Acceleration and Additional software"
 teaching: 30
 exercises: 0
 questions:
+- "How can I make my simulations faster using GPUs?"
 - "What other software can I use to prepare input files, and topology files?"
 - "How can I post-process my data?"
 objectives:
+- "Learning how to run LAMMPS simulations using GPU accelarators."
 - "Understand how to enhance the workflow around LAMMPS simulations."
 keypoints:
+- "LAMMPS has two packages (GPU and KOKKOS) that can make simulations run faster using accelerator cards."
 - "Packmol can be used to pack multiple of the same type of molecules into one topology file."
 - "MDAnalisys is a powerful python library to read, process, and create LAMMPS files."
 ---

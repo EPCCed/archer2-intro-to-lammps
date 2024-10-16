@@ -71,6 +71,42 @@ The lines with `ITEM:` let you know what is output on the next lines
 (so `ITEM: TIMESTEP` lets you know that the next line will tell you the time-step for this frame -- in this case, 100,000).
 A LAMMPS trajectory file will usually contain the time-step, number of atoms, and information on box bounds before outputting the information we'd requested.
 
+### Restart files
+
+To allow the continuation of the simulation (with the caveat that it must continue to run in the same number of cores as was originally used), we can create a restart file.
+
+This binary file contains information about system topology, force-fields, but not about computes, fixes, etc, these need to be re-defined in a new input file.
+
+You can write a restart file with the command:
+
+```
+write_restart  restart2.lj.equil
+```
+
+An arguably better solution is to write a data file, which not only is a text file,
+but can then be used without restrictions in a different hardware configuration, or even LAMMPS version.
+
+```
+write_data  lj.equil.data
+```
+
+You can use a restart or data file to start/restart a simulation by using a `read` command.
+For example:
+
+```bash
+read_restart restart2.lj.equil
+```
+
+will read in our restart file and use that final point as the starting point of our new simulation.
+
+Similarly:
+
+```bash
+read_data lj.equil.data
+```
+
+will do the same with the data file we've output (or any other data file).
+
 ### Radial distribution functions (RDFs)
 
 First, we will look at the Radial Distribution Function (RDF), _g_(_r_).
@@ -241,42 +277,6 @@ Then, we can plot the final output MSD using e.g. `gnuplot`:
 > {: .solution}
 {: .challenge}
 
-
-### Restart files
-
-To allow the continuation of the simulation (with the caveat that it must continue to run in the same number of cores as was originally used), we can create a restart file.
-
-This binary file contains information about system topology, force-fields, but not about computes, fixes, etc, these need to be re-defined in a new input file.
-
-You can write a restart file with the command:
-
-```
-write_restart  restart2.lj.equil
-```
-
-An arguably better solution is to write a data file, which not only is a text file,
-but can then be used without restrictions in a different hardware configuration, or even LAMMPS version.
-
-```
-write_data  lj.equil.data
-```
-
-You can use a restart or data file to start/restart a simulation by using a `read` command.
-For example:
-
-```bash
-read_restart restart2.lj.equil
-```
-
-will read in our restart file and use that final point as the starting point of our new simulation.
-
-Similarly:
-
-```bash
-read_data lj.equil.data
-```
-
-will do the same with the data file we've output (or any other data file).
 
 ## Variables and loops
 

@@ -123,6 +123,39 @@ Each category shows a breakdown of the least, average, and most amount of wall t
 >   - `Comm`: as little as possible. If it's growing large, it's a clear sign that too many computational resources are being assigned to a simulation.
 {: .callout}
 
+The next session is about the distribution of work amongs the different threads:
+
+```
+Nlocal:         7.8125 ave          12 max           5 min
+Histogram: 6 21 22 0 37 29 0 11 1 1
+Nghost:        755.055 ave         770 max         737 min
+Histogram: 2 6 4 18 23 20 30 13 7 5
+Neighs:        711.773 ave        1218 max         392 min
+Histogram: 8 14 24 15 31 22 11 1 0 2
+```
+
+The three subsections all have the same format: a title followed by average, maximum, and minimum number of particles per processor,
+followed by a 10-bin histogram of showing the distribution.
+The total number of histogram counts is equal to the number of processors used.
+The three properties listed are:
+ - `Nlocal`: number of owned atoms;
+ - `Nghost`: number of ghost atoms;
+ - `Neighs`: pairwise neighbours.
+
+
+The final section shows aggregate statistics accross all processors for pairwise neighbours:
+
+```
+Total # of neighbors = 91107
+Ave neighs/atom = 91.107
+Neighbor list builds = 4999
+Dangerous builds = 4996
+```
+
+It includes the number of total neighbours, the average number of neighbours per atom, the number of neighbour list rebuilds, and the number of _potentially dangerous_ rebuilds.
+The _potentially dangerous_ rebuilds are ones that are triggered on the first timestep that is checked.
+If this number is not zero, you should consider reducing the delay factor on the `neigh_modify` command.
+
 The last line on every LAMMPS simulation will be the total wall time for the entire input script, no matter how many `run` commands it has:
 
 ```

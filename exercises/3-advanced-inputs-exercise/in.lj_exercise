@@ -83,11 +83,10 @@ thermo        500
 dump          1 all custom 100 nvt.lammpstrj id type x y z vx vy vz
 dump_modify   1 sort id
 
-#compute       RDF all rdf 150 cutoff 3.5
-#fix           RDF_OUTPUT all ave/time 50 950 50000 c_RDF[*] file rdf_lj_${DENSITY}.out mode vector
-#
-#compute       MSD all msd
-#fix           MSD_OUTPUT all ave/correlate 1 50000 50000 c_MSD[4] file msd_lj.out ave running
+compute       RDF all rdf 150 cutoff 3.5
+fix           RDF_OUTPUT all      ave/time 50     950      50000 c_RDF[*] file    rdf_lj_${DENSITY}.out mode    vector
+#fix          ID         group-ID ave/time Nevery Nrepeate Nfreq value1   keyword arg                   keyword arg
+
 
 run_style     verlet
 

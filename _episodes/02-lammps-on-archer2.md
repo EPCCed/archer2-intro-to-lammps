@@ -245,8 +245,8 @@ In your `sub.slurm` file, you can edit the number of tasks in the line:
 ```bash
 #SBATCH --tasks-per-node=64
 ```
-to run on more cores.
-An ARCHER2 node has 128 cores, so you could potential run on up to 128 cores.
+to run on a different number of cores.
+An ARCHER2 node has 128 cores, so you can run LAMMPS on up to 128 cores.
 
 
 > ## Quick benchmark
@@ -278,7 +278,7 @@ An ARCHER2 node has 128 cores, so you could potential run on up to 128 cores.
 
 > ## Note
 > Here we are only considering MPI parallelisation.
-> LAMMPS offers the option to run using joint MPI+OpenMP (more on that on the advanced course),
+> LAMMPS offers the option to run using joint MPI+OpenMP (more on that on the advanced LAMMPS course),
 > but for the exercises in this lesson, we will only be considering MPI.
 {: .callout}
 

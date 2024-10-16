@@ -3,7 +3,7 @@
 # Slurm job options (name, number of compute nodes, job time)
 #SBATCH --job-name=lmp_ex2
 #SBATCH --nodes=1
-#SBATCH --time=0:20:0
+#SBATCH --time=0:10:0
 #SBATCH --hint=nomultithread
 #SBATCH --distribution=block:block
 #SBATCH --tasks-per-node=128

@@ -25,7 +25,7 @@ dimension     3
 boundary      p p p
 
 lattice       sc ${DENSITY}
-region        box block 0 10 0 10 0 10
+region        box block 0 50 0 50 0 50
 create_box    1 box
 create_atoms  1 box
 

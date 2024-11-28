@@ -33,7 +33,7 @@ A lot of repeat questions get asked there, so before you post your question, hav
 
 ## ARCHER2 resources
 
-If you attended the live course, you will retain access to your `ta176` account (with a small amount of budget) for a few weeks following the course.
+If you attended the live course, you will retain access to your `ta181` account (with a small amount of budget) for a few weeks following the course.
 This is to allow you to make sure that you understood all of the course materials,
 and have an opportunity to run any of the exercise simulations that you did not have time to complete in the training lesson.
 This is also to let you test out your own simulations on ARCHER2.

@@ -124,8 +124,8 @@ To run LAMMPS simulations on a large number of cores, we must use the compute no
 The `/home` file system is not accessible from the compute nodes.
 As such, we will need to submit our jobs from the `/work` directory.
 Every user has a directory in `/work` associated to their project code.
-For this course, the project code is `ta176`, so we all have a directory called:
-`/work/ta176/ta176/<username>` (make sure to replace `username` with your username).
+For this course, the project code is `ta181`, so we all have a directory called:
+`/work/ta181/ta181/<username>` (make sure to replace `username` with your username).
 
 We have prepared a number of exercises for today.
 You can either download these by either:
@@ -142,12 +142,12 @@ and then navigating to the `exercises folder` with:
 cd archer2-intro-to-lammps/exercises
 ```
 
-### Copy from `/work/ta176/shared`
+### Copy from `/work/ta181/shared`
 
-or by copying it from the shared part of the `ta176` project directory:
+or by copying it from the shared part of the `ta181` project directory:
 
 ```bash
-cp -r /work/ta176/shared/exercises ./
+cp -r /work/ta181/shared/exercises ./
 ```
 
 ### Exercise 1

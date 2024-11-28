@@ -21,7 +21,7 @@ Installation instructions can be found in the [user guide](https://m3g.github.io
 To pack a new system you will need a packmol input script and topology files for however many molecules your system has.
 The molecule topology files are commonly `.xyz` files, but packmol also accepts `.pdb`, `moldy`, and `tinker`.
 
-As an example in this lesson, we will use `water.xyz` and `ethanol.xyz`, see the end of this lesson.
+As an example in this lesson, we will use `water.xyz` and `ethanol.xyz`, see the end of this section for the full file.
 
 
 ### PACKMOL input script

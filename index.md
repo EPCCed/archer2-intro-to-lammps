@@ -10,9 +10,9 @@ humandate:
 humantime: 
 startdate: 
 enddate: 
-instructor: ["Julien Sindt and Rui Apóstolo"]
+instructor: ["Rui Apóstolo"]
 helper: [""]
-email: ["J.Sindt@epcc.ed.ac.uk, R.Apostolo@epcc.ed.ac.uk"]
+email: ["R.Apostolo@epcc.ed.ac.uk"]
 collaborative_notes: 
 eventbrite: 
 root: .

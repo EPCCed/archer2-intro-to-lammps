@@ -10,7 +10,7 @@
 #SBATCH --account=ta181
 # Standard partition
 #SBATCH --partition=gpu
-# Short QoS since our runtime is under 20m
+# Shared gpu qos
 #SBATCH --qos=gpu-shd
 
 # load the lammps module

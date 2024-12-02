@@ -10,7 +10,7 @@
 #SBATCH --cpus-per-task=1
 
 # The budget code of the project
-#SBATCH --account=ta176
+#SBATCH --account=ta181
 # Standard partition
 #SBATCH --partition=standard
 # Short QoS since our runtime is under 20m

@@ -7,10 +7,10 @@
 #SBATCH --time=0:05:0
 
 # The budget code of the project
-#SBATCH --account=ta176
+#SBATCH --account=ta181
 # Standard partition
 #SBATCH --partition=gpu
-# Short QoS since our runtime is under 20m
+# Shared gpu qos
 #SBATCH --qos=gpu-shd
 
 # load the lammps module

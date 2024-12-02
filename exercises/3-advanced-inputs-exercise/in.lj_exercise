@@ -80,7 +80,7 @@ timestep      0.005
 thermo_style  custom step temp etotal pe ke press vol density
 thermo        500
 
-dump          1 all custom 100 nvt.lammpstrj id type x y z vx vy vz
+dump          1 all custom 100 nvt_${DENSITY}.lammpstrj id type x y z vx vy vz
 dump_modify   1 sort id
 
 compute       RDF all rdf 150 cutoff 3.5
@@ -92,4 +92,4 @@ run_style     verlet
 
 run           50000
 
-write_restart  restart.lj.equil
+write_restart  restart.lj.equil_${DENSITY}

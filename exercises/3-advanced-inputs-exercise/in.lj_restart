@@ -2,7 +2,8 @@
 # 1) Read restart file
 #################################
 
-read_restart restart.lj.equil
+variable  DENSITY equal 0.8
+read_restart restart.lj.equil_${DENSITY}
 
 #################################
 # 2) Define simulation parameters
@@ -24,7 +25,7 @@ timestep      0.005
 thermo_style  custom step temp etotal pe ke press vol density
 thermo        500
 
-dump          1 all custom 100 npt.lammpstrj id type x y z vx vy vz
+dump          1 all custom 100 npt_${DENSITY}.lammpstrj id type x y z vx vy vz
 dump_modify   1 sort id
 
 compute       MSD all msd

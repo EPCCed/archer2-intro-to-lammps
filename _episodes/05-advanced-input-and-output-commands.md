@@ -136,9 +136,9 @@ Our `fix ave/time` has the following parameters:
    - `Nrepeat` is how many sets of values we want to average over (number of samples)
    - `Nevery` is how many time-steps in between samples.
    - `Nfreq` must be a multiple of `Nevery`, and `Nevery` must be non-zero even if `Nrepeat = 1`.
-   - So, for example, an `Nevery` of 2, with `Nrepeat` of 3, and `Nfreq` of 100 100 means that at every time-step multiple of 100,
-     there will be an average written to file, that was calculated by taking 3 samples, 2 time-steps apart.
-     Time-steps 96, 98, and 100 are averaged, and the average is written to file.
+   - So, for example, an `Nevery` of 2, with `Nrepeat` of 3, and `Nfreq` of 100: at every time-step multiple of 100 (`Nfreq`),
+     there will be an average written to file, that was calculated by taking 3 samples (`Nrepeat`), 2 time-steps apart (`Nevery`).
+     So, time-steps 96, 98, and 100 are averaged, and the average is written to file.
      Likewise at time-steps 196, 198, and 200, etc.
    - In this case, we take a sample every 25 time-steps, 100 times, and output at time-step number 5000
      -- so from time-step 2500 to 5000, sampling every 25 time-steps.
@@ -204,7 +204,7 @@ For this command, the file looks something like this:
 ### Mean-squared diplacement (MSD)
 
 The mean-squared displacement (MSD) is a measure of the average displacement that particles travel from their origin position at some given time.
-The slope of the RDF is directly proportional to the diffusion coefficient of the system.
+The slope of the MSD is directly proportional to the diffusion coefficient of the system.
 As with the RDF, we will require a `compute` command and a `fix` command to call that `compute`:
 
 ```

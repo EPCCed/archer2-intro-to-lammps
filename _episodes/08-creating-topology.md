@@ -93,7 +93,7 @@ In the next section, we will use **VMD** to automatically create the bonds, angl
 
 > ## Tip
 >
-> To solvate large molecules/particles (for example, polymers), it is considerably faster to do multi-stop packing, with different input files, one per molecule type, and using the `fixed` constraint for the topology with the already packed molecules.
+> To solvate large molecules/particles (for example, polymers), it is considerably faster to do multi-step packing, with different input files, one per molecule type, and using the `fixed` constraint for the topology with the already packed molecules.
 >
 > Example:
 >

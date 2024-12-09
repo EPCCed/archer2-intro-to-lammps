@@ -133,7 +133,7 @@ You can either download these by either:
 ### Using `git`
 
 ```bash
-git clone https://github.com/EPCCed/archer2-intro-to-lammps
+git clone https://github.com/EPCCed/archer2-intro-to-lammps.git
 ```
 
 and then navigating to the `exercises folder` with:
@@ -193,12 +193,13 @@ This will help us to understand what our simulation is doing, and where we can s
 Running:
 
 ```bash
-tail -n 27 log.64_cpus
+tail -n 28 log.64_cpus
 ```
 
 will output the following:
 
 ```
+Performance: 12.825 ns/day, 1.871 hours/ns, 148.442 timesteps/s
 100.0% CPU use with 64 MPI tasks x 1 OpenMP threads
 
 MPI task timing breakdown:
